@@ -14,11 +14,11 @@ def auth_view(request):
         else:
             return HttpResponseRedirect('/loginmodule/login/')
 def login_view(request):
-    return render(request,'login.html')
+    return render(request,'/loginmodule/login.html')
 def loggedin(request):
-    return render(request,'loggedin.html',{"fullname":"request.user.username"})
+    return render(request,'/loginmodule/loggedin.html',{"fullname":"request.u    ser.username"})
 def logout_view(request):
     auth.logout(request)
-    return render(request,'logout.html')
+    return render(request,'/loginmodule/logout.html')
 def invalidlogin(request):
-    return render(request,'invalidlogin.html')
+    return render(request,'/loginmodule/invalidlogin.html')

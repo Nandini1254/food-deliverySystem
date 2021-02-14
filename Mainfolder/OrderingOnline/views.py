@@ -4,4 +4,10 @@ from django.http import HttpResponse
 
 
 def index(request):
-    return HttpResponse("Welcome page")
+    return render(request,"OrderingOnline/index.html")
+
+def about(request):
+    return render(request,"OrderingOnline/about.html")
+
+def order(request):
+    pass
