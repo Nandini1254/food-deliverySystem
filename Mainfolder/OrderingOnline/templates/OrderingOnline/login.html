@@ -1,5 +1,5 @@
-{% extends 'OrderingOnline\root_file.html' %}
 {% block content %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'OrderingOnline/loginstyle.css' %}" />
 {% if form.errors %}
@@ -20,9 +20,10 @@
                 <label for="password">Password</label>
                 <input type="password" class="form-control" name="password" id="password" placeholder="Password" requried>
               </div>          
-             Forget Password? <a href="register.html" class="forgot">Click here</a> <button type="submit" class="btn btn-success ">Log in</button> 
+             Forget Password? <a href="#" class="forgot">Click here</a> <button type="submit" class="btn btn-success ">Log in</button> 
               <center></center>
             </form>
+            <a href="{% url 'customersignup' %}" class="forgot">Do you have account?</a>
+            <a href="{% url 'index' %}" class="forgot">Back</a>
       </div>
 {% endblock %}
-{% include 'OrderingOnline\footer.html' %}

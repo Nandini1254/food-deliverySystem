@@ -12,6 +12,12 @@ def index(request):
 def about(request):
     return render(request,"OrderingOnline/about.html")
 
+def login_category(request):
+    return render(request,"OrderingOnline/login_category.html")
+
+def register_category(request):
+    return render(request,"OrderingOnline/register_category.html")
+
 def login(request):
     if request.method=="POST":
        email=request.POST['email']

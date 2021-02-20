@@ -1,5 +1,5 @@
-{% extends 'restaurant/r_base.html' %}
 {% block content %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'OrderingOnline/loginstyle.css' %}" />
 {% if form.errors %}
@@ -10,7 +10,7 @@
           <form action="/OrderingOnline/login/" method="post">
             {% csrf_token %}
               <div class="login">
-                  <h1>Login</h1>
+                  <h1> Restaurant Login</h1>
               </div>
               <div class="form-group">
                 <label for="email">Email / Mobileno</label>
@@ -23,6 +23,7 @@
              Forget Password? <a href="register.html" class="forgot">Click here</a> <button type="submit" class="btn btn-success ">Log in</button> 
               <center></center>
             </form>
+            <a href="{% url 'restaurantsignup' %}" class="forgot">Do you have account?  </a>
+            <a href="{% url 'index' %}" class="forgot">Back</a>
       </div>
 {% endblock %}
-{% include 'OrderingOnline\footer.html' %}

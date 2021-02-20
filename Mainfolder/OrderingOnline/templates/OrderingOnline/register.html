@@ -1,5 +1,5 @@
-{% extends 'OrderingOnline\root_file.html' %}
 {% block content %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 {% load static %}
        <link rel="stylesheet" type="text/css" href="{% static 'OrderingOnline/register.css' %}" />
        {% if form.errors %}
@@ -58,8 +58,9 @@
             </div>
             <div class="buttons">
                 <button type="submit" class="btn btn-primary">sign UP</button>
+                <a href="{% url 'index' %}" class="btn btn-primary mx-5">Back</a> 
             </div>
-          </form>       
+          </form>  
     </div>  
 </div>
 {% endblock  %}

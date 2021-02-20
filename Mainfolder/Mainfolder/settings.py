@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'loginmodule',
     'restaurant',
-    'deliveryBoy',
+    # 'deliveryBoy',
     'cruidapp',
 ]
 

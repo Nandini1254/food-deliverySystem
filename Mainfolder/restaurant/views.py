@@ -7,19 +7,16 @@ from restaurant.models import Restaurant_manager
 
 
 def home(request):
-    return render(request,"restaurant/home.html")
-
-def about(request):
-    return render(request,"OrderingOnline/about.html")
+    return render(request,"restaurant/rHome.html")
 
 def r_login(request):
     if request.method=="POST":
        email=request.POST['email']
        password=request.POST['password']
-       if customer.objects.filter(email=email,password=password).exists():
-           user=customer.objects.get(email=email,password=password)
+       if Restaurant_manager.objects.filter(email=email,password=password).exists():
+           user=Restaurant_manager.objects.get(email=email,password=password)
            if user is not None:
-               return HttpResponse("yessss {}".format(user.uname))
+               return render(request,"restaurant/rHome.Html",context=user)
        else:
            return HttpResponse("not find")
     else:
@@ -38,12 +35,12 @@ def r_signup(request):
        city=request.POST['city']
        zipcode=request.POST['zipcode']
        if cpassword==password:
-           user=customer( Restaurant_name=restname,name=uname,email=email,mobile=mobileno,password=cpassword,address=address,state=state,city=city,zipcode=zipcode)
+           user=Restaurant_manager( Restaurant_name=restname,name=uname,email=email,mobile=mobileno,password=cpassword,address=address,state=state,city=city,zipcode=zipcode)
            if user is not None:
                user.save()
-               return HttpResponse("yessss")
+               return render(request,"restaurant/r_login.html")
        else:
-           return HttpResponse("not added")
+           return HttpResponse("something went wrong")
     else:
         return render(request,'restaurant/r_register.html')
     
