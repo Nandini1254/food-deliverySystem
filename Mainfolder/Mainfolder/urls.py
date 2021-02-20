@@ -20,4 +20,6 @@ urlpatterns = [
     url('admin/', admin.site.urls),
     path('OrderingOnline/',include('OrderingOnline.urls')),
     path('loginmodule/',include('loginmodule.urls')),
+    path('restaurant/',include('restaurant.urls')),
+    path('cruidapp/',include('cruidapp.urls')),
 ]

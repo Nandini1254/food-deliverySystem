@@ -1,0 +1,17 @@
+{% extends "cruidapp/cruidapp_index.html" %}
+{% block content %}
+<h1>Student List</h1>
+{% if object1 %}
+<ul>
+{% for student in object1 %}
+<li>
+<a href="{{ student.get_absolute_url }}">{{ student.user_name }}</a>
+({{student.dob}})
+</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>There are no students registered.</p>
+{% endif %}
+<p> <a href="addrecordpage">Click</a> to add new record. </p>
+{% endblock %}

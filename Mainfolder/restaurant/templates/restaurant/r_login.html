@@ -1,0 +1,28 @@
+{% extends 'restaurant/r_base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'OrderingOnline/loginstyle.css' %}" />
+{% if form.errors %}
+  <p class="error"> Invalid Username or Password </p>
+{% endif %}
+  <div class="contanier">
+      <div class="formclass">
+          <form action="/OrderingOnline/login/" method="post">
+            {% csrf_token %}
+              <div class="login">
+                  <h1>Login</h1>
+              </div>
+              <div class="form-group">
+                <label for="email">Email / Mobileno</label>
+                <input type="text" class="form-control" name="email" id="email" aria-describedby="emailHelp" placeholder="Enter email / Mobile no" required>
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Password" requried>
+              </div>          
+             Forget Password? <a href="register.html" class="forgot">Click here</a> <button type="submit" class="btn btn-success ">Log in</button> 
+              <center></center>
+            </form>
+      </div>
+{% endblock %}
+{% include 'OrderingOnline\footer.html' %}

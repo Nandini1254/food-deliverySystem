@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'OrderingOnline.apps.OrderingonlineConfig',
+    # 'restaurant.apps.RestaurantConfig'
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'loginmodule',
+    'restaurant',
+    'deliveryBoy',
+    'cruidapp',
 ]
 
 MIDDLEWARE = [
