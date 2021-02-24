@@ -8,7 +8,7 @@
       
 <div class="contanier">
     <div class="formclass">
-        <form action="/OrderingOnline/signup/" method="post">
+        <form action="{% url 'restaurantsignup' %}" method="post">
           {% csrf_token %}
             <div class="register">
                 <h1>Restaurant Registration</h1>

@@ -16,7 +16,7 @@ def r_login(request):
        if Restaurant_manager.objects.filter(email=email,password=password).exists():
            user=Restaurant_manager.objects.get(email=email,password=password)
            if user is not None:
-               return render(request,"restaurant/rHome.Html",context=user)
+               return render(request,"restaurant/rHome.Html")
        else:
            return HttpResponse("not find")
     else:
@@ -35,7 +35,7 @@ def r_signup(request):
        city=request.POST['city']
        zipcode=request.POST['zipcode']
        if cpassword==password:
-           user=Restaurant_manager( Restaurant_name=restname,name=uname,email=email,mobile=mobileno,password=cpassword,address=address,state=state,city=city,zipcode=zipcode)
+           user=Restaurant_manager( Restaurant_name=restname,status=False,uname=uname,email=email,mobile=mobileno,password=cpassword,address=address,state=state,city=city,zipcode=zipcode)
            if user is not None:
                user.save()
                return render(request,"restaurant/r_login.html")

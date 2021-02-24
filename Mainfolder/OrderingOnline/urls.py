@@ -7,6 +7,7 @@ urlpatterns = [
     path('login/',views.login,name="logincustomer"),
     path('r_login/',views2.r_login,name="loginrestaurant"),
     path('r_signup/',views2.r_signup,name="restaurantsignup"),
+    path('login_after_base/',views.login_after_base,name="userlogin"),
     path('signup/',views.signup,name="customersignup"),
     path('login_category/',views.login_category,name="login_category"),
     path('register_category/',views.register_category,name="register_category"),

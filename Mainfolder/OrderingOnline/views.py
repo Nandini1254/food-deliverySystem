@@ -18,6 +18,9 @@ def login_category(request):
 def register_category(request):
     return render(request,"OrderingOnline/register_category.html")
 
+def login_after_base(request):
+    return render(request,"OrderingOnline/login_after_base.html")
+
 def login(request):
     if request.method=="POST":
        email=request.POST['email']
