@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'loginmodule',
     'restaurant',
     # 'deliveryBoy',
-    'cruidapp',
+    #'cruidapp',
 ]
 
 MIDDLEWARE = [

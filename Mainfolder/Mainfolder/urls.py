@@ -21,5 +21,5 @@ urlpatterns = [
     path('OrderingOnline/',include('OrderingOnline.urls')),
     path('loginmodule/',include('loginmodule.urls')),
     path('restaurant/',include('restaurant.urls')),
-    path('cruidapp/',include('cruidapp.urls')),
+  #  path('cruidapp/',include('cruidapp.urls')),
 ]
