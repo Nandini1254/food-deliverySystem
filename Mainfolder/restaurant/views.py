@@ -98,5 +98,6 @@ def profile_show(request):
     return render(request,"restaurant/profile.html")
 
 def logout_rest(request):
-    request.session.flush()
+    if request.session['email']:
+        request.session.flush()
     return HttpResponseRedirect("/restaurant/r_login")
