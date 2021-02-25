@@ -1,12 +1,15 @@
+*{
+    padding-top: 10px;
+}
+.container{
+    margin-top:10px;
+}
 .main1{
-    position:absolute;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
     width:auto;
-    box-shadow: 5px 5px 20px #2c3e50;
+    /* box-shadow: 5px 5px 20px #2c3e50; */
     padding:3%;
     background-color: #ecf0f1;
+   
 }
 .main{
     /* margin:50px; */

@@ -16,7 +16,7 @@ def auth_view(request):
 def login_view(request):
     return render(request,'/loginmodule/login.html')
 def loggedin(request):
-    return render(request,'/loginmodule/loggedin.html',{"fullname":"request.u    ser.username"})
+    return render(request,'/loginmodule/loggedin.html',{"fullname":"request.user.username"})
 def logout_view(request):
     auth.logout(request)
     return render(request,'/loginmodule/logout.html')

@@ -12,20 +12,22 @@
   </head>
   
   <body>
+    <!-- {{request.session.r_photo}} -->
+    {% if request.session.r_email %}
+    <!-- "/media/"{{request.session.r_photo}} -->
     <div class="vertical-nav bg-white" id="sidebar">
       <div class="py-4 px-3 mb-4 bg-light">
-        <div class="media d-flex align-items-center"><img src="https://res.cloudinary.com/mhmd/image/upload/v1556074849/avatar-1_tcnd60.png" alt="..." width="65" class="mr-3 rounded-circle img-thumbnail shadow-sm">
+        <div class="media d-flex align-items-center"><img src="/media/{{request.session.r_photo}}" alt="..." width="65" class="mr-3 rounded-circle img-thumbnail shadow-sm">
           <div class="media-body">
-            <h4 class="m-0">Jason Doe</h4>
-            <p class="font-weight-light text-muted mb-0">Web developer</p>
+            <h4 class="m-0">{{request.session.r_name}}</h4>
+            <p class="font-weight-light text-muted mb-0">{{request.session.r_email}}</p>
           </div>
         </div>
       </div>
     
-    
       <ul class="nav flex-column bg-white mb-0">
         <li class="nav-item">
-          <a href="#" class="nav-link text-dark font-italic bg-light">
+          <a href="{% url 'profile' %}" class="nav-link text-dark font-italic">
             <i class="fas fa-user-circle fa-th-large mr-3 text-primary fa-fw"></i>
                    Profile
                 </a>
@@ -37,7 +39,7 @@
                 </a>
         </li>
         <li class="nav-item">
-          <a href="#" class="nav-link text-dark font-italic">
+          <a href="{% url 'logout_rest' %}" class="nav-link text-dark font-italic">
             <i class="fas fa-sign-out-alt mr-3 text-primary fa-fw"></i>
                    Log Out
                 </a>
@@ -45,13 +47,8 @@
       </ul>
     </div>
     <!-- End vertical navbar -->
+    {% endif %}
     
-    
-  
-   
-  
-    {% block content %}
-    {% endblock %}
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: Bootstrap Bundle with Popper -->

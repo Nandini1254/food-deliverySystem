@@ -12,5 +12,4 @@ urlpatterns = [
     path('login_category/',views.login_category,name="login_category"),
     path('register_category/',views.register_category,name="register_category"),
     # path('r_login/',restaurant.views.r_login,name="login_restaurnt"),
-] 
-#+ static(settings.MEDIA_URL,document_root=settings.MEDIA_URL)
+]

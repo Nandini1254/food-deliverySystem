@@ -3,6 +3,7 @@ from django.http import HttpResponse
 
 from django.contrib.auth.models import auth
 from OrderingOnline.models import customer
+# from OrderingOnline.decoders import unauthenticUser
 # Create your views here.
 
 
@@ -25,6 +26,7 @@ def login(request):
     if request.method=="POST":
        email=request.POST['email']
        password=request.POST['password']
+       user = auth.authenticate(username=username,password=password)
        if customer.objects.filter(email=email,password=password).exists():
            user=customer.objects.get(email=email,password=password)
            if user is not None:
@@ -33,6 +35,7 @@ def login(request):
            return HttpResponse("not find")
     else:
         return render(request,'OrderingOnline/login.html')
+    
 def signup(request):
     if request.method=="POST":
        uname=request.POST['username']
