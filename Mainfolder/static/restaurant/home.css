@@ -1,0 +1,23 @@
+*{
+    margin:0px;
+    padding:0px;
+}
+.container-fluid{
+    margin:0px;
+    padding: 0px;
+}
+.col-md-3{
+    background-color: #9AECDB;
+    padding-right: 10px;
+    min-height: 600px;
+}
+.container-main{
+    margin:10px;
+    position: relative;
+}
+.formclass{
+    position: absolute;
+    margin:50px;
+    padding: 50px;
+    width:60%;
+}
