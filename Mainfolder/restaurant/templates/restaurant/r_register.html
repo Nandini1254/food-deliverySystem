@@ -1,7 +1,7 @@
 {% block content %}
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 {% load static %}
-       <link rel="stylesheet" type="text/css" href="{% static 'OrderingOnline/register.css' %}" />
+       <link rel="stylesheet" type="text/css" href="{% static '/OrderingOnline/register.css' %}" />
        {% if form.errors %}
        <p class="error"> Invalid Username or Password </p>
        {% endif %}
@@ -14,6 +14,7 @@
                 <h1>Restaurant Registration</h1>
                 <br>
             </div>
+           
             <div class="form-group ">
                 <label for="uname">Restaurant Name</label>
                 <input type="text" class="form-control" name="restname" id="restname" placeholder="Enter Restaurant name">

@@ -46,9 +46,8 @@ def signup(request):
        address=request.POST['address']
        state=request.POST['state']
        city=request.POST['city']
-       zipcode=request.POST['zipcode']
        if cpassword==password:
-           user=customer(uname=uname,email=email,mobile=mobileno,password=cpassword,address=address,state=state,city=city,zipcode=zipcode)
+           user=customer(uname=uname,email=email,mobile=mobileno,password=cpassword,address=address,state=state,city=city)
            if user is not None:
                user.save()
                return HttpResponse("yessss")

@@ -1,8 +1,9 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 class Restaurant_manager(models.Model):
     id=models.IntegerField(primary_key=True)
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
     Restaurant_name=models.CharField(max_length=50,default="null")
     Restaurant_photo=models.ImageField(upload_to='restaurant_images/')
     status=models.BooleanField(default=False)
@@ -13,7 +14,6 @@ class Restaurant_manager(models.Model):
     address=models.CharField(max_length=150)
     state=models.CharField(max_length=20)
     city=models.CharField(max_length=20)
-    
     def __str__(self):
         return self.Restaurant_name
    

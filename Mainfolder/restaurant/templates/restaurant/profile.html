@@ -30,10 +30,17 @@
              <h1>Restaurant Profile</h1>
              <br>
          </div>
+         {% if request.session.r_photo %}
          <div class="register">
-            <img src="/media/{{request.session.r_photo}}"  width="100" alt="..">
+            <img src="/media/{{request.session.r_photo}}"  width="150" height="150" alt=".." class="mr-3 rounded-circle">
             <br>
         </div>
+         {% else %}
+        <div class="register">
+            <img src=""  width="100" alt="..">
+            <br>
+        </div>
+        {% endif %}
          <div class="form-group ">
              <label for="uname">Restaurant Name</label>
              <input type="text" class="form-control" name="restname" id="restname" value="{{request.session.r_name}}">
@@ -76,6 +83,8 @@
  </div>  
 
 </div>
+{% else %}
+Please Login for view profile<a href="{% url 'r_login' %}">Click</a>
 {% endif %}
     <!-- Optional JavaScript; choose one of the two! -->
 

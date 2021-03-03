@@ -1,0 +1,29 @@
+*{
+  box-sizing: border-box;
+}
+.header{
+    margin:10px;
+}
+.col-md-3{
+    background-color:cornflowerblue;
+    color:cornsilk;
+    
+    min-height: 650px;
+}
+a{
+    text-decoration: none;
+    color: white;
+    font-size: 24px;
+}
+a:hover{
+    color: plum;
+}
+
+/* for profile */
+.formclass{
+    width:50%;  
+    margin: auto;
+}
+.heading{
+    margin-top: 10px;
+}
