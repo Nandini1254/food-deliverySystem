@@ -1,0 +1,39 @@
+*{
+    margin:0px;
+    padding:0px;
+}
+.container-fluid{
+    margin:0px;
+    padding: 0px;
+}
+.col-md-3{
+    background-color:cornflowerblue;
+    padding-right: 10px;
+    min-height:650px;
+}
+a{
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+}
+a:hover{
+    color: plum;
+}
+/* changepassword css */
+.container-main{
+    margin:10px;
+    position: relative;
+}
+.formclass{
+    position: absolute;
+    padding: 20px;
+    width:60%;
+  
+}
+
+/* add items css */
+.formclass1{
+    position: absolute;
+    padding: 10px;
+    width:60%;
+}
