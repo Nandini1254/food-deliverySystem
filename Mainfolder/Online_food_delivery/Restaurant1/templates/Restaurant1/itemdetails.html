@@ -71,10 +71,26 @@
                     <h1>Update Food details:  {{data.pname}}</h1>
                     <br>
                 </div>
+                <h1>
+                    {% if available %}
+                    {{available}}
+                    {% endif %}
+                    {% if success %}         
+                      <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>  {{success}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                    {% endif %}
+                    {% if error %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                      {{error}}
+                    </div>
+                    {% endif %}
+                  </h1>
                 <div class="row">
                     <div class="col-md-7">
                         <div class="">
-                            <form action="{% url 'additems' %}" method="post" enctype="multipart/form-data">
+                            <form action="{% url 'item_details' id=data.id %}" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                
                                 <div class="row">

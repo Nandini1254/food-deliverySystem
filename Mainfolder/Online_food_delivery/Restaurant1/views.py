@@ -10,9 +10,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
 from Restaurant1.models import restaurant,Category,Item
+# for authenticate page
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
-
+@login_required(login_url='/restaurant/r_login/')
 def home(request):
     return render(request,"Restaurant1/rHome.html")
 
@@ -41,6 +43,8 @@ def r_login(request):
            return HttpResponse(request,"not find")
     else:
         return render(request,'Restaurant1/r_login.html')
+    
+    
 def r_signup(request):
     context={}
     if request.method=="POST":
@@ -65,11 +69,14 @@ def r_signup(request):
                     user1.save()
                     context['success']=messages="successfully inserted"
                     print(user)
+                    print("yes")
                     return render(request,"Restaurant1/r_login.html")
                 else:
                     context['error']="Please enter Image file"          
     return render(request,'Restaurant1/r_register.html',context)
-   
+
+
+@login_required(login_url='/restaurant/r_login/')
 def update(request):
     context={}
     context['error']=''
@@ -111,16 +118,22 @@ def update(request):
                return render(request,"/")
     else:
         return render(request,'Restaurant1/profile.html')
-# to show profile      
+    
+    
+    
+# to show profile    
+@login_required(login_url='/restaurant/r_login/')  
 def profile_show(request):   
     return render(request,"Restaurant1/profile.html")
 
+@login_required(login_url='/restaurant/r_login/') 
 def logout_rest(request):
     request.session.flush()
     auth.logout(request)
     return HttpResponseRedirect("/restaurant/r_login")
 
 # change password
+@login_required(login_url='/restaurant/r_login/') 
 def changingpassword(request):
     context={}
     if request.method=='POST':
@@ -139,7 +152,9 @@ def changingpassword(request):
                 user1.password=new_pass
                 user1.save()
                 request.session["r_pass"]=new_pass
-                user.password=new_pass
+                user.set_password(new_pass)
+                user.save()
+                print(user.password)
                 context["success"]="Successfully change password"
                 context['color']="alert-success"
                 # print(user.password)         
@@ -150,6 +165,7 @@ def changingpassword(request):
 
 
 #add item in resaturant
+@login_required(login_url='/restaurant/r_login/') 
 def add_items(request):
     context={}
     cat=Category.objects.all()
@@ -166,31 +182,44 @@ def add_items(request):
             data_item=Item(pname=food,pdesc=desc,price=price,pimage=image,category=category[0])
             data_item.save()
             data_item.rdata.add(rdata)
-            # data_get=Item.objects.get(pname=food)
-            # print(data_get['id']) 
             context['success']="Successfully added"
         else:
             context['error']="Please enter Image file"           
     return render(request,"Restaurant1/additems.html",context)
 
-
+@login_required(login_url='/restaurant/r_login/') 
 def manageitems(request):
     context={}
-    data=Item.objects.all()
+    rdata=restaurant.objects.get(Restaurant_name=request.session['r_name'])
+    data=Item.objects.filter(rdata=rdata.id)
     print("dt")
     print(data)
     context['data']=data
     return render(request,"Restaurant1/manage_items.html",context)
 
+@login_required(login_url='/restaurant/r_login/') 
 def itemdetails(request,id):
     context={}
+    context['error']=''
+    context['success']=''
     data=Item.objects.get(id=id)
     data_category=Category.objects.all()
     print(data_category)
     context['data_category']=data_category
     context['data']=data
+    if request.method=='POST':
+        data.pname=request.POST['foodname']
+        data.category=request.POST.getlist('category',None)
+        data.pdesc=request.POST['desc']
+        data.price=request.POST['price']
+        if "foodphoto" in request.FILES:
+            image=request.FILES['foodphoto']
+            if filetype.is_image(image):
+                data.pimage=image
+            else:
+                context['error']="Please enter Image file" 
+        data.save()            
+        context['success']="Successfully added data"             
     return render(request,"Restaurant1/itemdetails.html",context)
-
-
 
 

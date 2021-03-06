@@ -113,7 +113,8 @@ def change_password(request):
                 user1.password=new_pass
                 user1.save()
                 request.session["d_pass"]=new_pass
-                user.password=new_pass
+                user.set_password(new_pass)
+                user.save()
                 context["message"]="Successfully change password"
                 context['color']="alert-success"
                 # print(user.password)         

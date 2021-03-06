@@ -7,11 +7,7 @@
     justify-content: center;
 }
 .card{
-    background-color: rgb(80, 202, 106);
     text-align: center;
-    justify-content: space-around;
-    position: relative;
-    
 }
 .image-details-card{
     margin:auto;

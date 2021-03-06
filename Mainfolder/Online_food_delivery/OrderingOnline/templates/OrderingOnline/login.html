@@ -20,7 +20,7 @@
                 <label for="password">Password</label>
                 <input type="password" class="form-control" name="password" id="password" placeholder="Password" requried>
               </div>          
-             Forget Password? <a href="#" class="forgot">Click here</a> <button type="submit" class="btn btn-success ">Log in</button> 
+             Forget Password? <a href="{% url 'reset_password' %}" class="forgot">Click here</a> <button type="submit" class="btn btn-success ">Log in</button> 
               <center></center>
             </form>
             <a href="{% url 'customersignup' %}" class="forgot">Do you have account?</a>
