@@ -19,6 +19,7 @@ def home(request):
     return render(request,"Restaurant1/rHome.html")
 
 def r_login(request):
+    context={}
     if request.method=="POST":
        uname=request.POST['email']
        password=request.POST['password']
@@ -40,7 +41,8 @@ def r_login(request):
            request.session['r_photo']=str(user.Restaurant_photo) 
            return render(request,"Restaurant1/rHome.Html")               
        else:
-           return HttpResponse(request,"not find")
+           context['not_exist'] ="User is not exist"
+           return render(request,'OrderingOnline/login.html',context)
     else:
         return render(request,'Restaurant1/r_login.html')
     

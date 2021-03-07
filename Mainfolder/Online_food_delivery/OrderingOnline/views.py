@@ -1,14 +1,22 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from django.http import HttpResponseRedirect
 from django.contrib.auth.models import auth
 from OrderingOnline.models import customer
+from django.contrib.auth.models import User
+from Restaurant1.models import restaurant,Item,cart
+from django.contrib.auth.hashers import check_password
 # from OrderingOnline.decoders import unauthenticUser
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
 def index(request):
-    return render(request,"OrderingOnline/index.html")
+    context={}
+    rest=restaurant.objects.all()
+    context['rest']=rest
+    context['range']=range(1)
+    return render(request,"OrderingOnline/index.html",context)
 
 def about(request):
     return render(request,"OrderingOnline/about.html")
@@ -23,18 +31,28 @@ def login_after_base(request):
     return render(request,"OrderingOnline/login_after_base.html")
 
 def login(request):
+    context={}
     if request.method=="POST":
-       email=request.POST['email']
+       username=request.POST['email']
        password=request.POST['password']
        user = auth.authenticate(username=username,password=password)
-       if customer.objects.filter(email=email,password=password).exists():
-           user=customer.objects.get(email=email,password=password)
-           if user is not None:
-               return HttpResponse("yessss {}".format(user.uname))
-       else:
-           return HttpResponse("not find")
-    else:
-        return render(request,'OrderingOnline/login.html')
+       if user is not None:
+            if customer.objects.filter(uname=username).exists():
+                user1=customer.objects.get(uname=username)
+                print("yes")
+                if user1 is not None:
+                    auth.login(request,user)
+                    request.session['customer_id']=user1.id
+                    request.session['user_id']=user.id
+                    return render(request,"OrderingOnline/index.html")
+                else:
+                    context['not_exist'] ="User is not exist"
+                    return render(request,'OrderingOnline/login.html',context)
+            else:
+                context['not_exist'] ="User is not exist"
+                return render(request,'OrderingOnline/login.html',context)                
+    return render(request,'OrderingOnline/login.html',context)
+       
     
 def signup(request):
     if request.method=="POST":
@@ -47,21 +65,126 @@ def signup(request):
        state=request.POST['state']
        city=request.POST['city']
        if cpassword==password:
-           user1=auth.authenticate(username=username,password=password)
+           user1=auth.authenticate(username=uname,password=password)
+           print(user1)
            if user1 is None:
-                user1=User1.create_user(username=uname,email=email,password=password)
-                if user1 is not none:
+                print("no")
+                user1=User.objects.create_user(username=uname,email=email,password=password)
+                if user1 is not None:
                     user=customer(uname=uname,email=email,mobile=mobileno,password=cpassword,address=address,state=state,city=city)
                     if user is not None:
+                        print("yes")
                         user1.save()
                         user.save()
-                        return HttpResponse("yessss")
+                        return render(request,"OrderingOnline/login.html")
                     else:
-                        pass
+                        return render(request,"OrderingOnline/register.html")
                 else:
-                    return HttpResponse("not allow")
+                    return render(request,'OrderingOnline/register.html')
        else:
-           return HttpResponse("not added")
+          return render(request,'OrderingOnline/register.html')
+    return render(request,'OrderingOnline/register.html')
+    
+@login_required(login_url='/OrderingOnline/login')  
+def profile_show_customer(request):
+    context={}
+    user=customer.objects.get(id=request.session['customer_id'])
+    context['user']=customer.objects.get(id=request.session['customer_id'])
+    print(request.session['customer_id'])
+    # user=customer.objects.get(id=request.session['customer_id'])
+    # print(user)  
+    return render(request,"OrderingOnline/profile.html",context)
+
+@login_required(login_url='/OrderingOnline/login') 
+def logout_cutomer(request):
+    request.session.flush()
+    auth.logout(request)
+    return HttpResponseRedirect("/OrderingOnline/login")   
+    
+    
+@login_required(login_url='/OrderingOnline/login')
+def update(request):
+    context={}
+    user=customer.objects.get(id=request.session['customer_id'])
+    context['user']=customer.objects.get(id=request.session['customer_id'])
+    if request.method=="POST":     
+       if restaurant.objects.filter(id=request.session['customer_id']).exists():
+           user=customer.objects.get(id=request.session['customer_id'])
+           print("yes")
+           if user is not None:          
+               user.mobileno=request.POST['mobileno']
+               user.state=request.POST['state']
+               user.city=request.POST['city']
+               user.address=request.POST['address']    
+               user.save() 
+               context['success']="successfully updated"        
+               return render(request,'OrderingOnline/profile.html',context)
+           else:
+               return render(request,"/OrderingOnline/signup")
     else:
-        return render(request,'OrderingOnline/register.html')
+        return render(request,'OrderingOnline/profile.html',context)
+    
+# change password
+@login_required(login_url='/OrderingOnline/login')
+def changingpassword_cust(request):
+    context={}
+    if request.method=='POST':
+        current=request.POST['Oldpassword']
+        new_pass=request.POST['Newpassword']
+        new_verify=request.POST['NewConfirmpassword']
+        if(new_pass==new_verify):
+            user=User.objects.get(id=request.session['user_id'])
+            check=check_password(current,user.password)
+            # print(check)
+            if check==True:
+                # print(check)
+                user1=customer.objects.get(id=request.session['customer_id'])
+                user1.password=new_pass
+                user1.save()
+                user.set_password(new_pass)
+                user.save()
+                print(user.password)
+                context["success"]="Successfully change password"      
+            else:
+                context["fail"]="Incorrect password"    
+        else:
+            context['not_same']="password is not same"    
+    return render(request,"OrderingOnline/changingpassword.html",context)
+
+    
+
+# show restaurnat items
+
+def show_restaurant(request,id):
+    context={}
+    items=Item.objects.filter(rdata=id)
+    context['items']=items
+    return render(request,"OrderingOnline/show_restaurant_items.html",context)
+
+
+def cart_show(request):
+    context={}
+    cust=customer.objects.get(id=request.session['customer_id'])
+    cartuser=cart.objects.filter(userdata=cust)
+    context['cart']=cartuser
+    return render(request,"OrderingOnline/cart.html",context)
+    
+    
+def add_to_cart(request,id):
+    context={}
+    if id!=0:
+        Item_data=Item.objects.get(id=id)
+        cust=customer.objects.get(id=request.session['customer_id'])
+        cartItem=cart(userdata=cust,Items_data=Item_data,quantity=1)
+        cartItem.save()
+    # print(cartItem)
+        cartuser=cart.objects.filter(userdata=cust)
+        context['cart']=cartuser
+        for x in cartuser:
+            print(x.Items_data.pname)
+        id=0
+    return HttpResponseRedirect("/OrderingOnline/cartdetails")
+    
+def add_to_favourite(request,id):
+    pass
     

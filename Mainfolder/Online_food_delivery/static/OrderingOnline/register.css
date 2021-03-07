@@ -24,3 +24,42 @@
     display: flex;
     justify-content: center;
 }
+
+
+/* indexpage css */
+.index-heading
+{
+    background-image: url('/media/food_images/home/home.jpg');
+    height: 100vh;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    z-index: 1;
+    position: relative;
+    opacity: 0.8;
+}
+.carousel-main{
+    padding-top: 30px;
+    padding-left:400px;
+    position: relative;
+}
+.carousel-main .carousel-indicators
+{
+    padding-right: 500px;
+}
+
+
+
+/* about page */
+.about{
+    background-image: url('/media/food_images/home/about.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    z-index: 1;
+    height: 100vh;
+    width: 100%;
+    color: black;
+
+}

@@ -7,12 +7,20 @@ urlpatterns = [
     path('',views.index,name="index"),
     path('about/',views.about,name="about"),
     path('login/',views.login,name="logincustomer"),
-    path('r_login/',views2.r_login,name="loginrestaurant"),
-    path('r_signup/',views2.r_signup,name="restaurantsignup"),
-    path('login_after_base/',views.login_after_base,name="userlogin"),
     path('signup/',views.signup,name="customersignup"),
+    path('logout/',views.logout_cutomer,name="logout_customer"),
+    path('profile/',views.profile_show_customer,name="profile_customer"),
+    path('update/',views.update,name="updateprofile_cust"),
+    path('changepassword/',views.changingpassword_cust,name="changingpassword_customer"),
+     
     path('login_category/',views.login_category,name="login_category"),
     path('register_category/',views.register_category,name="register_category"),
+#     //restaurant
+    path('r_login/',views2.r_login,name="loginrestaurant"),
+    path('r_signup/',views2.r_signup,name="restaurantsignup"),
+   
+    
+#     delivery boy
     path('d_login/',views3.d_login,name="logindeliveryboy"),
     path('d_signup/',views3.d_signup,name='deliveryboysignup'),
     
@@ -34,4 +42,13 @@ urlpatterns = [
          auth_views.PasswordResetCompleteView.as_view(template_name='OrderingOnline/forgetpasswordreset_confirmation.html'),
          name="password_reset_complete"),
     
+    
+#     showing restaurant data  at user side
+     path("show_restaurant/<int:id>/",views.show_restaurant,name="show_restaurant"),
+     path("add_to_cart/<int:id>/",views.add_to_cart,name="add_to_cart"),
+     path("add_to_favourite/<int:id>/",views.add_to_cart,name="add_to_favourite"),
+      path("cartdetails/",views.cart_show,name="cart_show"),
+
+
+
 ]
