@@ -6,36 +6,63 @@
    
 <!-- cart name -->
 <center><h1>My cart</h1></center>
+
+{% if cart_item_success %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>{{cart_item_success}}</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+
+{% endif %}
+<div class="cart_page">
+
+
 {% if cart %}
-      <div class="row">
-        {% for x in cart %}
-        <div class="col-sm-12 col-md-12 ">
-          <div class="card mt-5 ms-5" style="max-width: 540px;">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img src="/media/{{x.Items_data.pimage}}" class="w-100 h-100" alt="Available">
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">{{x.Items_data.pname}}</h5>
-                  <p class="card-text">Category:{{x.Items_data.category}}</p></p></br>
-                  <p class="card-text">Price: {{x.Items_data.price}}<br>
-                   <p class="card-text">discount: {{x.Items_data.discount}}<br>
-                    <p class="card-text">final amount: 
-                  <p class="card-text"><small class="text-muted">{{x.feedback}}</small></p>
-                  <a href="#" class="btn btn-success">Purchase now</a>
-                  <a href="#" class="btn btn-danger">Remove</a>      
-                </div>
-              </div>
+<div class="container cart_page">
+  <div class="row">
+    {% for x in cart %}
+    <div class="col-sm-12 col-md-12 mt-2 ">
+      <div class="card" style="size:80%;">
+        <div class="row">
+          <div class="col-md-5">
+            <img src="/media/{{x.Items_data.pimage}}" class="w-100 h-100" alt="Available">
+          </div>
+          <div class="col-md-7">
+            <div class="card-body">
+              <h5 class="card-title">{{x.Items_data.pname}}</h5>
+              <p class="card-text">Category:{{x.Items_data.category}}</p></p></br>
+              <p class="card-text">Price: {{x.Items_data.price}}<br>
+               <p class="card-text">discount: {{x.Items_data.discount}}<br>
+                <p class="card-text">final amount: 
+              <p class="card-text"><small class="text-muted">{{x.feedback}}</small></p>
+              <a href="#" class="btn btn-success">Purchase now</a>
+              
+              <a href="{% url 'delete_item_from_cart' id=x.Items_data.id %}" class="btn btn-danger delete">Remove</a>      
             </div>
-          </div> 
-         
+          </div>
         </div>
-    
-       
-       {% endfor %}
-      </div>
-    
+      </div> 
+     
+    </div>
+
+   </div>
+  
+   {% endfor %}
+
+{% else %}
+</div>
+<br>
+<br>
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  Cart is empty!!
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+</div>
+
+     
 {% endif %}
 {% include 'OrderingOnline\footer.html' %}
+
 {% endblock %} 

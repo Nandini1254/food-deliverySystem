@@ -3,7 +3,18 @@
 {% load static %}
        <link rel="stylesheet" type="text/css" href="{% static 'OrderingOnline/register.css' %}" />
   
+
     <div class="index-heading">
+   {{delete}}
+      {% if sure %}
+      <div class="alert alert-light alert-dismissible fade show" role="alert">
+        <form action="{% url 'delete_customer' %}" method="post">
+          {% csrf_token %}
+          {{sure}} <input type="submit" class="btn btn-outline-success" name="yes" value="Yes"></form>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      
+      {% endif %}
 
       <div class="carousel-main">
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">

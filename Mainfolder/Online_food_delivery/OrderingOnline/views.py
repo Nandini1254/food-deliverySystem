@@ -123,7 +123,32 @@ def update(request):
                return render(request,"/OrderingOnline/signup")
     else:
         return render(request,'OrderingOnline/profile.html',context)
-    
+  
+  
+#delete account
+@login_required(login_url='/OrderingOnline/login')
+def delete_customer(request):
+    context={}
+    user=customer.objects.get(id=request.session['customer_id'])
+    context['user']=customer.objects.get(id=request.session['customer_id'])
+    context['sure']="Are you sure? Do you want to account delete? "
+    if request.method=='POST':
+        delete=request.POST['yes']
+        if delete is not None:
+            cust=customer.objects.get(id=request.session['customer_id'])
+            user=User.objects.get(username=cust.uname)
+            data=cart.objects.filter(userdata=cust)     
+            data.delete()
+            user.delete()
+            cust.delete()
+            request.session.flush()
+            auth.logout(request)
+            context['sure']=''
+            return render(request,"OrderingOnline/index.html") 
+                  
+    return render(request,'OrderingOnline/index.html',context)
+
+  
 # change password
 @login_required(login_url='/OrderingOnline/login')
 def changingpassword_cust(request):
@@ -154,7 +179,7 @@ def changingpassword_cust(request):
     
 
 # show restaurnat items
-
+@login_required(login_url='/OrderingOnline/login')
 def show_restaurant(request,id):
     context={}
     items=Item.objects.filter(rdata=id)
@@ -172,19 +197,36 @@ def cart_show(request):
     
 def add_to_cart(request,id):
     context={}
-    if id!=0:
-        Item_data=Item.objects.get(id=id)
-        cust=customer.objects.get(id=request.session['customer_id'])
-        cartItem=cart(userdata=cust,Items_data=Item_data,quantity=1)
-        cartItem.save()
+    Item_data=Item.objects.get(id=id)
+    cust=customer.objects.get(id=request.session['customer_id'])
+    cartItem=cart(userdata=cust,Items_data=Item_data,quantity=1)
+    cartItem.save()
     # print(cartItem)
-        cartuser=cart.objects.filter(userdata=cust)
-        context['cart']=cartuser
-        for x in cartuser:
-            print(x.Items_data.pname)
-        id=0
+    cartuser=cart.objects.filter(userdata=cust)
+    context['cart']=cartuser
+    for x in cartuser:
+        print(x.Items_data.pname)
     return HttpResponseRedirect("/OrderingOnline/cartdetails")
     
 def add_to_favourite(request,id):
     pass
     
+    
+def show_dish(request,id):
+    context={}
+    Item_data=Item.objects.get(id=id)
+    context['Item_data']=Item_data
+    return render(request,"OrderingOnline/show_dish.html",context)
+
+def delete_item_from_cart(request,id):
+    user=customer.objects.get(id=request.session['customer_id'])
+    Item_data=Item.objects.get(id=id)
+    data=cart.objects.get(Items_data=Item_data,userdata=user)
+    Item_deleted_id=data.return_items_id()
+    print(data.Items_data)
+    print(data.userdata)
+    print(Item_deleted_id)
+    data.delete()
+    context={}
+    context['cart_item_success']="successfully deleted"
+    return render(request,"OrderingOnline/cart.html",context)

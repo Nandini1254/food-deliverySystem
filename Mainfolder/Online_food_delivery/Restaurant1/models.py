@@ -61,9 +61,10 @@ class cart(models.Model):
     userdata=models.ForeignKey(customer, on_delete=models.CASCADE)
     Items_data=models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity=models.IntegerField(default=0)
+    final_amount=models.DecimalField(max_digits=6,decimal_places=2,default=0)
     
     def return_items_id(self):
-        return Items_data
+        return id
     
     def __str__(self):
         return "added"

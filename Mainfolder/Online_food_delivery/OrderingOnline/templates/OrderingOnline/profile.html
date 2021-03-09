@@ -19,6 +19,9 @@
     {% endif %}
 
 <div class="contanier">
+
+
+
 {% if success %}
   <div class="alert alert-success alert-dismissible fade show" role="alert">
     <strong>{{success}}</strong>
@@ -61,9 +64,8 @@
            </div>
          </div>
          <div class="buttons">
-             <button type="submit" class="btn btn-success m-2 col-md-4">Update</button>
-             <a href="{% url 'index' %}" class="btn btn-dark m-2 col-md-4">Back</a>
-             <a href="{% url 'changingpassword_customer' %}" class="btn btn-warning m-2 col-md-4" >Change Password</a>
+             <button type="submit" class="btn btn-success m-2 col-md-3">Update</button>
+             <a href="{% url 'index' %}" class="btn btn-dark m-2 col-md-3">Back</a>
          </div> 
        </form>       
  </div>  

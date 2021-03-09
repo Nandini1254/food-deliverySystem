@@ -63,3 +63,41 @@
     color: black;
 
 }
+
+
+/* cart page */
+
+.buttons_carts .cart{
+    background-color: #0597B9;
+}
+.buttons_carts .like{
+    background-color: #e71235;
+}
+
+
+.cart_page{
+    min-height: 250px;
+}
+
+
+/* show dish page */
+
+.show_dish .image_item img{
+    width:200px;
+    height: 200px;
+    border-radius: 50%;
+}
+.show_dish .image_item{
+   margin:auto;
+   margin-top:10px;
+   margin-bottom:10px;
+  
+}
+.show_dish .card{
+    margin:auto;
+    margin-top: 20px;
+    width:60%;
+    -webkit-box-shadow: 0px 0px 14px 1px rgba(255,105,97,1);
+    -moz-box-shadow: 0px 0px 14px 1px rgba(255,105,97,1);
+    box-shadow: 0px 0px 14px 1px rgba(255,105,97,1);
+}
