@@ -1,7 +1,7 @@
 from django.urls import path
 from OrderingOnline import views
 import restaurant.views as views2
-import deliveryboy.views as views3
+import delivery_boy.views as views3
 urlpatterns = [
     path('',views.index,name="index"),
     path('about/',views.about,name="about"),

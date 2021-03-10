@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static '/Restaurant1/home.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static '/Restaurant1/item.css' %}">
+
+
+    <title>Home</title>
+</head>
+
+<body>
+    <!-- {{request.session.r_photo}} -->
+    {% if request.session.r_email %}
+    <!-- "/media/"{{request.session.r_photo}} -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="vertical-nav " id="sidebar">
+                    <div>
+                        <div style="text-align: center;"><img src="/media/{{request.session.r_photo}}" alt="..."
+                                width="65" height="65" class="mr-3 rounded-circle img-thumbnail shadow-sm">
+                            <div class="">
+                                <h4 class="m-0">{{request.session.r_name}}</h4>
+                                <p>{{request.session.r_email}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul class="nav flex-column mb-0">
+                        <li class="nav-item">
+                            <a href="{% url 'profile' %}" class="nav-link  font-italic">
+                                <i class="fas fa-user-circle fa-th-large mr-3  fa-fw"></i>
+                                Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'additems' %}" class="nav-link  font-italic">
+                                <i class="fas fa-plus-square mr-3  fa-fw"></i>
+                                Add Items
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'changingpassword' %}" class="nav-link  font-italic">
+                                <i class="fa fa-key mr-3  fa-fw" aria-hidden="true"></i>
+                                Change Password
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'logout_rest' %}" class="nav-link  font-italic">
+                                <i class="fas fa-sign-out-alt mr-3  fa-fw"></i>
+                                Log Out
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+            <div class="col-md-9">
+                    <div class="row">
+                        {% for x in data %}
+                        <div class="col-md-4" style="margin-top: 10px;">
+                            
+                            <div class="card" style="width: 15rem;">
+                                <div>
+                                    <img class="card-img item" src="/media/{{x.pimage}}"  alt="Card image cap">
+                                </div>
+                                <div>
+                                  <h5 >{{x.pname}}</h5>
+                                  <p >{{x.category}}</p>
+                                  <p >{{x.price}}</p>
+                                  <a href="{% url 'item_details' id=x.id %}" class="btn btn-warning" style="margin-bottom: 10px;">Update</a>
+                                  <a href="{% url 'item_details' id=x.id %}" class="btn btn-danger" style="margin-bottom: 10px;">Delete</a>
+                                   
+                                </div>
+                              </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+            </div>
+        </div>
+        <!-- End vertical navbar -->
+        {% endif %}
+
+
+
+        <!-- Optional JavaScript; choose one of the two! -->
+
+        <!-- Option 1: Bootstrap Bundle with Popper -->
+        <!-- javascript link -->
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>

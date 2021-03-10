@@ -23,7 +23,7 @@ urlpatterns = [
     path('OrderingOnline/',include('OrderingOnline.urls')),
     path('loginmodule/',include('loginmodule.urls')),
     path('restaurant/',include('restaurant.urls')),
-    path('deliveryboy/',include('deliveryboy.urls')),
+    path('delivery_boy/',include('delivery_boy.urls')),
   #  path('cruidapp/',include('cruidapp.urls')),
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 
