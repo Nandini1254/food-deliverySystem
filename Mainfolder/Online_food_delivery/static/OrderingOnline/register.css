@@ -1,8 +1,7 @@
 .container{
-    margin-bottom: 40px;
     min-height: 100%;
     bottom:90%;
-    margin-bottom: 20px;  
+    padding-bottom: 10px;  
 }
 .register{
     text-align: center;
@@ -82,6 +81,10 @@
 
 /* show dish page */
 
+.show_dish{
+    background-image: radial-gradient(circle, #3be9bc, #1fe9ad, #00e99b, #00e886, #00e76f, #55da4f, #74cd2f, #8abf00, #a6a200, #b68400, #bb6600, #b74821);
+    padding: 10px 0;
+}
 .show_dish .image_item img{
     width:200px;
     height: 200px;
@@ -89,15 +92,59 @@
 }
 .show_dish .image_item{
    margin:auto;
-   margin-top:10px;
-   margin-bottom:10px;
-  
 }
 .show_dish .card{
     margin:auto;
-    margin-top: 20px;
     width:60%;
     -webkit-box-shadow: 0px 0px 14px 1px rgba(255,105,97,1);
     -moz-box-shadow: 0px 0px 14px 1px rgba(255,105,97,1);
     box-shadow: 0px 0px 14px 1px rgba(255,105,97,1);
+}
+
+.order_page{
+    padding-top: 10px;
+    background-image: linear-gradient(to right top, #edf62b, #fbd514, #ffb31b, #ff922c, #f6733c, #e87233, #d9712b, #cb7023, #b18810, #909b23, #67ab49, #21b776);
+}
+.order_page .total
+{
+    border-radius: 30px;
+    margin-left:80%;
+    margin-bottom: 20px;
+    width:20%;
+    padding: 5px;
+    text-align: center;
+    color:white;
+    margin-right: 30px;
+    background-image: linear-gradient(to right top, #f62b60, #f2345c, #ed3b58, #e94154, #e44751, #df484c, #da4a47, #d54b42, #ce4a3a, #c64931, #bf4929, #b74821);
+}
+.order_page .total:hover
+{
+    color: #f62b60;
+    background-image: linear-gradient(to right top, #cdeeff, #c0e8fb, #b3e2f6, #a5ddf1, #97d7ec, #88d3e6, #78cee0, #68cad9, #54c6ce, #40c1c1, #2ebcb3, #21b7a3);
+}
+
+.order_page .paynow .pay
+{
+    margin:10px;
+    padding: 5px 10px;
+    color: #fff;
+    font-size: 1.5em;
+    border-radius: 20px;
+    font-weight: 600;
+    background-image: linear-gradient(to bottom, #7fe93b, #70e953, #62e968, #55e97a, #49e88a, #44e487, #3fdf85, #39db82, #39d26d, #3bc957, #3ec03f, #42b721);
+}
+
+
+.order_page .card
+{
+   height:150px;
+   width: 400px;
+}
+.order_page .card p
+{
+   margin: 0px;
+}
+.order_page .card img{
+    width:150px;
+    height: 150px;
 }

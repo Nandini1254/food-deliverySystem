@@ -12,7 +12,15 @@
   <strong>{{cart_item_success}}</strong>
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
+{% endif %}
 
+{% if confirm %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  <form action="{% url 'placeorder' %}" method="post">
+    {% csrf_token %}
+    {{confirm}} <input type="submit" class="btn btn-outline-success" name="yes" value="Yes"></form>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 
 {% endif %}
 <div class="cart_page">
@@ -36,24 +44,22 @@
                <p class="card-text">discount: {{x.Items_data.discount}}<br>
                 <p class="card-text">final amount: 
               <p class="card-text"><small class="text-muted">{{x.feedback}}</small></p>
-              <a href="#" class="btn btn-success">Purchase now</a>
+              <a href="{% url 'placeorder' %}" class="btn btn-success">Purchase now</a>
               
               <a href="{% url 'delete_item_from_cart' id=x.Items_data.id %}" class="btn btn-danger delete">Remove</a>      
             </div>
           </div>
         </div>
       </div> 
-     
     </div>
 
-   </div>
+
   
    {% endfor %}
+  </div>
+</div>
 
 {% else %}
-</div>
-<br>
-<br>
 <div class="alert alert-success alert-dismissible fade show" role="alert">
   Cart is empty!!
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

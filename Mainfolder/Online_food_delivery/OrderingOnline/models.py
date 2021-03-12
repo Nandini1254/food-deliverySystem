@@ -22,3 +22,9 @@ class customer(models.Model):
     def __str__(self):
         return self.uname
     
+class Account(models.Model):
+    id=models.AutoField(primary_key=True)
+    user_account=models.ForeignKey(customer, on_delete=models.CASCADE)
+    account_no=models.CharField(max_length=12,default=None)
+    
+    

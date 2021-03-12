@@ -46,11 +46,13 @@ urlpatterns = [
     
 #     showing restaurant data  at user side
      path("show_restaurant/<int:id>/",views.show_restaurant,name="show_restaurant"),
-     path("add_to_cart/<int:id>/",views.add_to_cart,name="add_to_cart"),
+     path("add_to_cart/<int:rest_id>,<int:id>,<slug:page>",views.add_to_cart,name="add_to_cart"),
      path("add_to_favourite/<int:id>/",views.add_to_favourite,name="add_to_favourite"),
      path("cartdetails/",views.cart_show,name="cart_show"),
-     path("showdetails/<int:id>/",views.show_dish,name="show_dish"),
+     path("showdetails/<int:rest_id>,<int:id>/",views.show_dish,name="show_dish"),
      path("deleteitems/<int:id>/",views.delete_item_from_cart,name="delete_item_from_cart"),
+     path("placeorder/",views.placeorder,name="placeorder"),
+      path("deleteitems_order/<int:id>/",views.delete_item_from_order,name="delete_item_from_order"),
      
 
 

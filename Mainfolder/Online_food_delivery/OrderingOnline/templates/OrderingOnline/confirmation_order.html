@@ -1,0 +1,50 @@
+{% extends 'OrderingOnline\root_file.html' %}
+{% block content %}
+{% load static %}
+       <link rel="stylesheet" type="text/css" href="{% static 'OrderingOnline/register.css' %}" />
+  
+
+
+<div class="order_page">
+{% if cart %}
+<div class="container">
+   
+        <h4 class="total">Total: {{total}}</h4>
+    
+  <div class="row">
+    {% for x in order %}
+    <div class="col-sm-6 col-md-6 mt-3">
+      <div class="card">
+        <div class="row">
+          <div class="col-md-4">
+            <img src="/media/{{x.Items_data.pimage}}" alt="Available">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">{{x.Items_data.pname}}</h5>
+              <p class="card-text">Category:{{x.Items_data.category}}</p>
+              <p class="card-text">Price: {{x.Items_data.price}}</p> 
+              <a href="{% url 'delete_item_from_order' id=x.Items_data.id %}" class="btn btn-danger delete">Remove</a>      
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>
+   {% endfor %}
+
+</div>
+
+<div class="paynow">
+<form action="" method="post">
+    <center> <input type="submit" class="pay" name="pay" value="Pay Now"></center>
+   
+</form>
+</div>
+</div>
+
+     
+{% endif %}
+</div>
+{% include 'OrderingOnline\footer.html' %}
+
+{% endblock %} 

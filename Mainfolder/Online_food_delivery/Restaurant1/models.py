@@ -17,7 +17,7 @@ class restaurant(models.Model):
     address=models.CharField(max_length=150)
     state=models.CharField(max_length=20)
     city=models.CharField(max_length=20)
-    feedback=models.DecimalField(max_digits=1,decimal_places=1,default=0.0)
+    # feedback=models.DecimalField(max_digits=1,decimal_places=1,default=0.0)
     def __str__(self):
         return self.Restaurant_name
     
@@ -36,23 +36,31 @@ class Item(models.Model):
     price=models.DecimalField(max_digits=6,decimal_places=2)
     pimage=models.ImageField(upload_to='menu_images/')
     category=models.CharField(max_length=150,default="delicious")
-    discount=models.DecimalField(max_digits=3,decimal_places=0,default=0)
+    total=models.DecimalField(max_digits=6,decimal_places=2,default=0.0)
+    discount=models.DecimalField(max_digits=3,decimal_places=2,default=0)
+    feedback=models.DecimalField(max_digits=1,decimal_places=0,default=0)
     
     def __str__(self):
         return self.pname
     
 
-       
-class Order(models.Model):
+class OrderProduct(models.Model):
     id=models.AutoField(primary_key=True)
     created_on=models.DateTimeField(auto_now_add=True)
+    status=models.CharField(max_length=150,default="not_delivered")
     price=models.DecimalField(max_digits=6,decimal_places=2)
-    items=models.ManyToManyField('Item',related_name="order_items_detail",blank=True)
+    userdata=models.ForeignKey(customer, on_delete=models.CASCADE)
+    Items_data=models.ForeignKey(Item, on_delete=models.CASCADE)
+    rdata=models.ManyToManyField(restaurant,related_name='rest_order')
     
     def __str__(self):
         return f'Order: {self.created_on.strftime("%b %d %I: %M %p")}'
+    
+    def update_order(self):
+        self.status="dekivered"  
 
-class demo(models.Model):
+
+class offer(models.Model):
     name=models.CharField(max_length=10)
     
     

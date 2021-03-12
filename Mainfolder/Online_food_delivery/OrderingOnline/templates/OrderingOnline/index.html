@@ -4,7 +4,7 @@
        <link rel="stylesheet" type="text/css" href="{% static 'OrderingOnline/register.css' %}" />
   
 
-    <div class="index-heading">
+<div class="index-heading">
    {{delete}}
       {% if sure %}
       <div class="alert alert-light alert-dismissible fade show" role="alert">
@@ -42,7 +42,7 @@
 {% if rest %}
     <div class="restaurant-name">
       <div class="row">
-        {% for x in rest %}
+      {% for x in rest %}
         {% for y in range %}
         <div class="col-sm-12 col-md-6">
           <div class="card mt-5 ms-5" style="max-width: 540px;">
@@ -62,12 +62,10 @@
           </div> 
          
         </div>
-        {% endfor %}
-       
+        {% endfor %}    
        {% endfor %}
       </div>
     </div>
-
 {% endif %}
 {% include 'OrderingOnline\footer.html' %}
 {% endblock %} 

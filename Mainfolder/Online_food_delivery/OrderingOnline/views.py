@@ -4,10 +4,11 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.models import auth
 from OrderingOnline.models import customer
 from django.contrib.auth.models import User
-from Restaurant1.models import restaurant,Item,cart
+from Restaurant1.models import restaurant,Item,cart,OrderProduct
 from django.contrib.auth.hashers import check_password
 # from OrderingOnline.decoders import unauthenticUser
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 # Create your views here.
 
 
@@ -179,14 +180,14 @@ def changingpassword_cust(request):
     
 
 # show restaurnat items
-@login_required(login_url='/OrderingOnline/login')
 def show_restaurant(request,id):
     context={}
     items=Item.objects.filter(rdata=id)
     context['items']=items
+    context['rest_id']=id
     return render(request,"OrderingOnline/show_restaurant_items.html",context)
 
-
+@login_required(login_url='/OrderingOnline/login')
 def cart_show(request):
     context={}
     cust=customer.objects.get(id=request.session['customer_id'])
@@ -194,13 +195,27 @@ def cart_show(request):
     context['cart']=cartuser
     return render(request,"OrderingOnline/cart.html",context)
     
-    
-def add_to_cart(request,id):
+@login_required(login_url='/OrderingOnline/login')
+def add_to_cart(request,rest_id,id,page):
     context={}
     Item_data=Item.objects.get(id=id)
+    print(Item_data.id)
     cust=customer.objects.get(id=request.session['customer_id'])
-    cartItem=cart(userdata=cust,Items_data=Item_data,quantity=1)
-    cartItem.save()
+    print(cust.id)
+    check_data=cart.objects.filter(userdata=cust,Items_data=Item_data)
+    print(check_data)
+    if check_data:
+        if page == 'show_restaurant_items':
+            messages.info(request,Item_data)
+            messages.warning(request, "You have already this dish in cart")
+            return HttpResponseRedirect("/OrderingOnline/show_restaurant/{}".format(rest_id))
+        if page == 'show_dish':
+            messages.info(request,Item_data)
+            messages.warning(request, "You have already this dish in cart")
+            return HttpResponseRedirect("/OrderingOnline/showdetails/{0},{1}".format(rest_id,id))     
+    else:
+        cartItem=cart(userdata=cust,Items_data=Item_data,quantity=1)
+        cartItem.save() 
     # print(cartItem)
     cartuser=cart.objects.filter(userdata=cust)
     context['cart']=cartuser
@@ -210,14 +225,15 @@ def add_to_cart(request,id):
     
 def add_to_favourite(request,id):
     pass
-    
-    
-def show_dish(request,id):
+
+def show_dish(request,rest_id,id):
     context={}
     Item_data=Item.objects.get(id=id)
     context['Item_data']=Item_data
+    context['rest_id']=rest_id
     return render(request,"OrderingOnline/show_dish.html",context)
 
+@login_required(login_url='/OrderingOnline/login')
 def delete_item_from_cart(request,id):
     user=customer.objects.get(id=request.session['customer_id'])
     Item_data=Item.objects.get(id=id)
@@ -230,3 +246,49 @@ def delete_item_from_cart(request,id):
     context={}
     context['cart_item_success']="successfully deleted"
     return render(request,"OrderingOnline/cart.html",context)
+
+@login_required(login_url='/OrderingOnline/login')
+def placeorder(request):
+    context={}
+    user=customer.objects.get(id=request.session['customer_id'])
+    cart_data=cart.objects.filter(userdata=user)
+    price=0
+    for x in cart_data:
+        price+=x.Items_data.price-x.Items_data.discount
+        print(x.Items_data.pname)
+    context['cart']=cart_data
+    context['confirm']="Do You want to order? "
+    if request.method=='POST':
+        context['confirm']=''
+        price=0.0
+        order=OrderProduct.objects.filter(userdata=user)
+        for x in cart_data:         # for fetching data from order
+            item=Item.objects.get(id=x.Items_data_id)
+            order_place=OrderProduct(price=item.price,Items_data=item,userdata=user)
+            order_place.save()
+        print(price)
+        order=OrderProduct.objects.filter(userdata=user)
+        for y in order:
+            item=Item.objects.get(id=y.Items_data_id)
+            price+=float(item.price)-float(item.discount)   
+        print(price)
+        context['order']=order
+        context['total']=price
+        return render(request,"OrderingOnline/confirmation_order.html",context)
+    return render(request,"OrderingOnline/cart.html",context)
+    
+    
+
+@login_required(login_url='/OrderingOnline/login')
+def delete_item_from_order(request,id):
+    user=customer.objects.get(id=request.session['customer_id'])
+    Item_data=Item.objects.get(id=id)
+    data=OrderProduct.objects.get(Items_data_id=Item_data.id,userdata=user.id)
+    data.delete()
+    context={}
+    context['cart_item_success']="successfully deleted"
+    return render(request,"OrderingOnline/confirmation_order.html",context)
+
+@login_required(login_url='/OrderingOnline/login')
+def payOrder(request):
+    pass
