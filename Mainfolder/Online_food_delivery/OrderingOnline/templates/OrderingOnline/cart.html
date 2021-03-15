@@ -27,7 +27,13 @@
 
 
 {% if cart %}
-<div class="container cart_page">
+
+
+<div class="container">
+
+  <div class="btn btn-primary">
+    Total : {{price}}
+  </div>
   <div class="row">
     {% for x in cart %}
     <div class="col-sm-12 col-md-12 mt-2 ">
@@ -39,14 +45,18 @@
           <div class="col-md-7">
             <div class="card-body">
               <h5 class="card-title">{{x.Items_data.pname}}</h5>
-              <p class="card-text">Category:{{x.Items_data.category}}</p></p></br>
-              <p class="card-text">Price: {{x.Items_data.price}}<br>
-               <p class="card-text">discount: {{x.Items_data.discount}}<br>
-                <p class="card-text">final amount: 
-              <p class="card-text"><small class="text-muted">{{x.feedback}}</small></p>
-              <a href="{% url 'placeorder' %}" class="btn btn-success">Purchase now</a>
+              <p class="card-text">Category:{{x.Items_data.category}}</p>
+              <p class="card-text">Price: {{x.Items_data.price}}</p>
+               <p class="card-text">discount: {{x.Items_data.discount}}</p>
+                <p class="card-text">final amount: {{x.Items_data.total}}</p>
+                quantity:{{x.quantity}}
+                  
+                <p class="card-text mt-2"><small class="text-muted">Feedback: {{x.Items_data.feedback}}</small></p>
+          
+              <a href="{% url 'placeorder' %}" class="btn btn-success mt-2">Purchase now</a>
               
-              <a href="{% url 'delete_item_from_cart' id=x.Items_data.id %}" class="btn btn-danger delete">Remove</a>      
+              <a href="{% url 'delete_item_from_cart' id=x.Items_data.id %}" class="btn btn-danger mt-2 delete">Remove</a>      
+            
             </div>
           </div>
         </div>

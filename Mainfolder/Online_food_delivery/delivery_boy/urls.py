@@ -12,6 +12,7 @@ urlpatterns = [
     path('update/',views.update,name="updateprofile_deliveryboy"), 
     path('logout_deliveryboy/',views.logout_deliveryboy,name="logout_deliveryboy"),
     path('change_password/',views.change_password,name="change_password"),
+    path('delete_deliveryboy/',views.delete_deliveryboy,name="delete_deliveryboy"),
     
     
     

@@ -16,6 +16,7 @@ urlpatterns = [
      
     path('login_category/',views.login_category,name="login_category"),
     path('register_category/',views.register_category,name="register_category"),
+    path('search/',views.search,name="search"),
 #     //restaurant
     path('r_login/',views2.r_login,name="loginrestaurant"),
     path('r_signup/',views2.r_signup,name="restaurantsignup"),
@@ -47,14 +48,26 @@ urlpatterns = [
 #     showing restaurant data  at user side
      path("show_restaurant/<int:id>/",views.show_restaurant,name="show_restaurant"),
      path("add_to_cart/<int:rest_id>,<int:id>,<slug:page>",views.add_to_cart,name="add_to_cart"),
+     
      path("add_to_favourite/<int:id>/",views.add_to_favourite,name="add_to_favourite"),
      path("cartdetails/",views.cart_show,name="cart_show"),
-     path("showdetails/<int:rest_id>,<int:id>/",views.show_dish,name="show_dish"),
+     path("showdishes/<int:id>/",views.show_dish_by_search,name="show_dish_by_search"),
+     path("showdetails/<int:id>,<int:rest_id>/",views.show_dish,name="show_dish"),
+      
+     
      path("deleteitems/<int:id>/",views.delete_item_from_cart,name="delete_item_from_cart"),
      path("placeorder/",views.placeorder,name="placeorder"),
-      path("deleteitems_order/<int:id>/",views.delete_item_from_order,name="delete_item_from_order"),
+     # path("deleteitems_order/<int:id>,<int:order_id>/",views.delete_item_from_order,name="delete_item_from_order"),
+     # path("count/<int:id>/",views.count,name="count"),
      
-
+     
+     #for payment
+     # path('pay/',views.payment,name="pay_page"),
+     path('charge_pay/',views.charge_pay,name="charge_pay"),
+     path('payment/',views.payment,name="payment"),
+     path('saved_account/',views.saved_account,name="saved_account"),
+     path('reset_account/',views.reset_account,name="reset_account"),
+    
 
 
 ]

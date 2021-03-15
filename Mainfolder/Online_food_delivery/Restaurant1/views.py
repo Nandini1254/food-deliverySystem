@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 # Create your views here.
 import filetype
 import os
@@ -67,8 +67,8 @@ def r_signup(request):
              if "restphoto" in request.FILES:
                 if filetype.is_image(request.FILES['restphoto']):
                     user.Restaurant_photo=request.FILES['restphoto']
-                    user.save()
                     user1.save()
+                    user.save()
                     context['success']=messages="successfully inserted"
                     print(user)
                     print("yes")
@@ -127,6 +127,22 @@ def update(request):
 @login_required(login_url='/restaurant/r_login/')  
 def profile_show(request):   
     return render(request,"Restaurant1/profile.html")
+
+
+
+#account delete
+@login_required(login_url='/restaurant/r_login/')
+def deleteaccount(request):
+    user=User.objects.get(username=request.session['r_user'])
+    user_rest=restaurant.objects.get(uname=request.session['r_user'])
+    #relation view delete--->check remainning
+    Items=Item.objects.filter(rdata=user)
+    user_rest.Item_set.clear()
+    Items.delete()
+    user_rest.delete()
+    user.delete()
+    return redirect("/")
+    
 
 @login_required(login_url='/restaurant/r_login/') 
 def logout_rest(request):
@@ -225,3 +241,10 @@ def itemdetails(request,id):
     return render(request,"Restaurant1/itemdetails.html",context)
 
 
+@login_required(login_url='/restaurant/r_login/') 
+def deleteitems(request,id):
+    context={}
+    context['success']='successfully deleted'
+    data=Item.objects.get(id=id)
+    data.delete()  
+    return render(request,"Restaurant1/manage_items.html",context)

@@ -22,48 +22,18 @@
   <div class="contanier">
     <div class="container-fluid">
       <div class="row">
-       <div class="col-md-3"> <div class="vertical-nav " id="sidebar">
-        <div >
-            <div style="text-align: center;" class="header">
-              <h4 class="m-0">{{request.session.d_name}}</h4>
-              <p >{{request.session.d_email}}</p>
-            </div>
-          </div>
-      
-        <ul class="nav flex-column mb-0">
-            <li class="nav-item">
-                <a href="{% url 'home' %}" class="nav-link  font-italic">
-                  <i class="fas fa-home fa-th-large mr-3  fa-fw"></i>
-                        Home
-                      </a>
-              </li>
-          <li class="nav-item">
-            <a href="{% url 'd_profile' %}" class="nav-link active font-italic">
-              <i class="fas fa-user-circle fa-th-large mr-3  fa-fw"></i>
-                     Profile
-                  </a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'change_password' %}" class="nav-link  font-italic">
-              <i class="fa fa-key mr-3  fa-fw" aria-hidden="true"></i>
-                     Change Password
-                  </a>
-          </li>
-          <li class="nav-item">
-            <a href="{% url 'logout_deliveryboy' %}" class="nav-link  font-italic">
-              <i class="fas fa-sign-out-alt mr-3  fa-fw"></i>
-                     Log Out
-                  </a>
-          </li>
-          
-        </ul>
-      </div>
-    </div>
+        {% include "delivery_boy\sidebar.html" %}
 <!-- navbar compleated -->
        <div class="col-md-9">
         <div>
-            {% if mess %}
-             {{mes.message}}
+            {% if messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <strong>  {{messages}}</strong>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+           
             {% endif %}       
         <form action="{% url 'updateprofile_deliveryboy' %}"   class="formclass" method="post" enctype="multipart/form-data">
             {% csrf_token %} 

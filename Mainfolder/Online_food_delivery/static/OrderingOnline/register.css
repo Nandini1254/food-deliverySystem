@@ -1,7 +1,15 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Akaya+Telivigala&display=swap');
+
+*{
+    font-family: 'Akaya Telivigala', cursive;  
+}
+
 .container{
     min-height: 100%;
     bottom:90%;
-    padding-bottom: 10px;  
+    padding-bottom: 10px;
+  
 }
 .register{
     text-align: center;
@@ -28,12 +36,13 @@
 /* indexpage css */
 .index-heading
 {
-    background-image: url('/media/food_images/home/home.jpg');
+    background-image:url('/media/food_images/home/home.jpg');
     height: 100vh;
     width: 100%;
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
+    background-size: 100% 100%;
     z-index: 1;
     position: relative;
     opacity: 0.8;
@@ -52,14 +61,18 @@
 
 /* about page */
 .about{
-    background-image: url('/media/food_images/home/about.jpg');
+    background-image: url('https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_1340/Lunch1_vlksgq');
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: cover;
     z-index: 1;
     height: 100vh;
     width: 100%;
-    color: black;
+    font-weight: 400;
+    font-size: 1.2em;
+    background-size: cover;
+    background-color: rgb(25, 68, 77);
+    background-blend-mode: overlay;
+    color: white;
 
 }
 
@@ -77,7 +90,12 @@
 .cart_page{
     min-height: 250px;
 }
-
+.cart_page .btn-primary{ 
+    margin: auto;
+    border-bottom: 2px solid black;
+    background-color: rgb(131, 26, 61);
+    color:blanchedalmond
+}
 
 /* show dish page */
 
@@ -147,4 +165,32 @@
 .order_page .card img{
     width:150px;
     height: 150px;
+}
+
+
+
+/* payment .page */
+
+.payment{
+    background-image: linear-gradient(to left top, #d16ba5, #ec7585, #f18c67, #e1a958, #c3c662, #afd26b, #96dd7a, #75e790, #66e788, #55e77f, #40e776, #1ee76d);
+    height: 60vh;
+    padding-top: 30px;
+}
+.payment form{
+    
+     margin: auto;
+     width: 30%;
+     border-radius: 20px;
+    padding: 20px;
+     
+}
+.payment .checkout
+{
+    margin-top: 10px;
+    background-color: #871C59;
+    border-radius: 50px;
+    padding: 5px 15px;
+    color:white;
+    box-shadow: none;
+    border:1px solid #871C59;
 }

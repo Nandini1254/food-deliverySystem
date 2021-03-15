@@ -1,26 +1,59 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from django.utils.datastructures import MultiValueDictKeyError
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import auth
-from OrderingOnline.models import customer
+from OrderingOnline.models import customer,Account_user
 from django.contrib.auth.models import User
 from Restaurant1.models import restaurant,Item,cart,OrderProduct
 from django.contrib.auth.hashers import check_password
 # from OrderingOnline.decoders import unauthenticUser
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-# Create your views here.
+from django.views import View
 
-
+from django.views.generic import TemplateView
+from django.http import JsonResponse
+from django.conf import settings
+import random
+import os
+from twilio.rest import Client
+def save_otp(mobile):
+        account_sid = 'AC75173bb622333cb934fbdb95b68e90ce'
+        auth_token = 'd2de390e6a58a0df1b39370a63ed0bb6'
+        otp=random.random()
+        client = Client(account_sid, auth_token)
+        message = client.messages.create(
+                body='your otp is {}'.format(otp),
+                from_=+12242231053,
+                to='9328003668'
+        )
+        print(otp)
+        
 def index(request):
     context={}
     rest=restaurant.objects.all()
     context['rest']=rest
     context['range']=range(1)
+    context['cart_count']=cart.objects.all().count
     return render(request,"OrderingOnline/index.html",context)
 
+def search(request):
+    context={}
+    context['cart_count']=cart.objects.all().count
+    q=request.GET['dish']
+    result=Item.objects.filter(pname=q).order_by('feedback','price')
+    result2=restaurant.objects.filter(Restaurant_name=q).order_by('feedback')
+    context['result']=result
+    context['result2']=result2
+    print(result)
+    return render(request,"OrderingOnline/search.html",context)
+    
+
 def about(request):
-    return render(request,"OrderingOnline/about.html")
+    context={}
+    context['cart_count']=cart.objects.all().count
+    return render(request,"OrderingOnline/about.html",context)
 
 def login_category(request):
     return render(request,"OrderingOnline/login_category.html")
@@ -28,8 +61,6 @@ def login_category(request):
 def register_category(request):
     return render(request,"OrderingOnline/register_category.html")
 
-def login_after_base(request):
-    return render(request,"OrderingOnline/login_after_base.html")
 
 def login(request):
     context={}
@@ -85,6 +116,7 @@ def signup(request):
        else:
           return render(request,'OrderingOnline/register.html')
     return render(request,'OrderingOnline/register.html')
+ 
     
 @login_required(login_url='/OrderingOnline/login')  
 def profile_show_customer(request):
@@ -96,13 +128,15 @@ def profile_show_customer(request):
     # print(user)  
     return render(request,"OrderingOnline/profile.html",context)
 
+
+# logout
 @login_required(login_url='/OrderingOnline/login') 
 def logout_cutomer(request):
     request.session.flush()
     auth.logout(request)
     return HttpResponseRedirect("/OrderingOnline/login")   
     
-    
+# update customer profile 
 @login_required(login_url='/OrderingOnline/login')
 def update(request):
     context={}
@@ -130,6 +164,7 @@ def update(request):
 @login_required(login_url='/OrderingOnline/login')
 def delete_customer(request):
     context={}
+    context['cart_count']=cart.objects.all().count
     user=customer.objects.get(id=request.session['customer_id'])
     context['user']=customer.objects.get(id=request.session['customer_id'])
     context['sure']="Are you sure? Do you want to account delete? "
@@ -153,6 +188,7 @@ def delete_customer(request):
 # change password
 @login_required(login_url='/OrderingOnline/login')
 def changingpassword_cust(request):
+    context['cart_count']=cart.objects.all().count
     context={}
     if request.method=='POST':
         current=request.POST['Oldpassword']
@@ -177,62 +213,157 @@ def changingpassword_cust(request):
             context['not_same']="password is not same"    
     return render(request,"OrderingOnline/changingpassword.html",context)
 
-    
+ 
+def show_dish_by_search(request,id):
+    context={}
+    context['cart_count']=cart.objects.all().count
+    Item_data=Item.objects.get(id=id)
+    context['Item_data']=Item_data
+    rest=Item_data.rdata.get()
+    print(Item_data.id,rest.id)
+    context['rest_id']=rest.id
+    return render(request,"OrderingOnline/show_dish.html",context)   
 
+# food dish show
+def show_dish(request,id,rest_id):
+    context={}
+    context['cart_count']=cart.objects.all().count
+    Item_data=Item.objects.get(id=id)
+    context['Item_data']=Item_data
+    context['rest_id']=rest_id
+    return render(request,"OrderingOnline/show_dish.html",context)
 # show restaurnat items
 def show_restaurant(request,id):
     context={}
+    context['cart_count']=cart.objects.all().count
     items=Item.objects.filter(rdata=id)
     context['items']=items
     context['rest_id']=id
     return render(request,"OrderingOnline/show_restaurant_items.html",context)
 
+def count(request,id):
+    context={}
+    context['cart_count']=cart.objects.all().count
+    items=Item.objects.filter(rdata=id)
+    context['items']=items
+    context['rest_id']=id
+    if request.method=="POST":
+        context['count']=request.POST['quantity']
+        return render(request,"OrderingOnline/show_restaurant_items.html",context)
+# showing cart element 
 @login_required(login_url='/OrderingOnline/login')
 def cart_show(request):
     context={}
+    context['cart_count']=cart.objects.all().count
     cust=customer.objects.get(id=request.session['customer_id'])
     cartuser=cart.objects.filter(userdata=cust)
     context['cart']=cartuser
+    price=0.0
+    for x in cartuser:
+        try:
+            if request.method=='POST':
+                print("yes")
+                x.quantity=request.POST['quantity']
+                print(x.quantity)
+        except MultiValueDictKeyError:
+            print("handle")
+                 
+        item=Item.objects.get(id=x.Items_data_id)
+        item.total=x.quantity*(float(item.price)-float(item.discount))
+        item.save()
+        print(item.total)
+        price+=float(item.price)-float(item.discount) 
+    context['price']=price 
+        
     return render(request,"OrderingOnline/cart.html",context)
-    
+   
+   
+#adding data in cart 
 @login_required(login_url='/OrderingOnline/login')
 def add_to_cart(request,rest_id,id,page):
     context={}
+    context['cart_count']=cart.objects.all().count
     Item_data=Item.objects.get(id=id)
     print(Item_data.id)
     cust=customer.objects.get(id=request.session['customer_id'])
     print(cust.id)
     check_data=cart.objects.filter(userdata=cust,Items_data=Item_data)
     print(check_data)
+    quantity=1
+    context['quantity']=quantity
+   
     if check_data:
-        if page == 'show_restaurant_items':
-            messages.info(request,Item_data)
-            messages.warning(request, "You have already this dish in cart")
-            return HttpResponseRedirect("/OrderingOnline/show_restaurant/{}".format(rest_id))
-        if page == 'show_dish':
-            messages.info(request,Item_data)
-            messages.warning(request, "You have already this dish in cart")
-            return HttpResponseRedirect("/OrderingOnline/showdetails/{0},{1}".format(rest_id,id))     
+        try:
+            if page == 'show_restaurant_items':
+                messages.info(request,Item_data)
+                messages.warning(request, "You have already this dish in cart")
+                return HttpResponseRedirect("/OrderingOnline/show_restaurant/{}".format(rest_id))
+            if page == 'show_dish':
+                messages.info(request,Item_data)
+                messages.warning(request, "You have already this dish in cart")
+                return HttpResponseRedirect("/OrderingOnline/showdetails/{0},{1}".format(id,rest_id))
+        except:
+            return HttpResponseRedirect("/OrderingOnline/showdishes/{0}".format(id))
     else:
-        cartItem=cart(userdata=cust,Items_data=Item_data,quantity=1)
+        final_amount=float(Item_data.price)-float(Item_data.discount)
+        print(final_amount)
+        cartItem=cart(userdata=cust,Items_data=Item_data,quantity=quantity,final_amount=final_amount)
         cartItem.save() 
     # print(cartItem)
     cartuser=cart.objects.filter(userdata=cust)
     context['cart']=cartuser
     for x in cartuser:
+        item=Item.objects.get(id=x.Items_data_id)
+        item.total=float(item.price)-float(item.discount)
+        item.save()
         print(x.Items_data.pname)
     return HttpResponseRedirect("/OrderingOnline/cartdetails")
+  
+  
+  
     
 def add_to_favourite(request,id):
     pass
 
-def show_dish(request,rest_id,id):
-    context={}
-    Item_data=Item.objects.get(id=id)
-    context['Item_data']=Item_data
-    context['rest_id']=rest_id
-    return render(request,"OrderingOnline/show_dish.html",context)
 
+
+
+
+
+
+
+@login_required(login_url='/OrderingOnline/login')
+def placeorder(request):
+    context={}
+    context['cart_count']=cart.objects.all().count
+    user=customer.objects.get(id=request.session['customer_id'])
+    cart_data=cart.objects.filter(userdata=user)
+    price=0.0
+    for x in cart_data:
+        price+=float(x.Items_data.price)-float(x.Items_data.discount)
+        print(x.Items_data.pname)
+    context['price']=price
+    context['cart']=cart_data
+    context['confirm']="Do You want to order? "
+    if request.method=='POST':
+        context['confirm']=''
+        price=0.0
+        for x in cart_data:         # for fetching data from order
+            # item=Item.objects.get(id=x.Items_data_id)
+            order_place=OrderProduct(price=x.final_amount,userdata=user,cartdata=x)
+            order_place.save()
+        print(price)
+        order=OrderProduct.objects.filter(userdata=user)
+        for y in order:
+           price+=float(y.price)
+        print("order-total ",price)
+        context['order']=order
+        context['total']=price
+        return render(request,"OrderingOnline/confirmation_order.html",context)
+    return render(request,"OrderingOnline/cart.html",context)
+    
+
+#deleteitems from cart and order
 @login_required(login_url='/OrderingOnline/login')
 def delete_item_from_cart(request,id):
     user=customer.objects.get(id=request.session['customer_id'])
@@ -244,51 +375,139 @@ def delete_item_from_cart(request,id):
     print(Item_deleted_id)
     data.delete()
     context={}
+    context['cart_count']=cart.objects.all().count
     context['cart_item_success']="successfully deleted"
-    return render(request,"OrderingOnline/cart.html",context)
-
-@login_required(login_url='/OrderingOnline/login')
-def placeorder(request):
-    context={}
-    user=customer.objects.get(id=request.session['customer_id'])
-    cart_data=cart.objects.filter(userdata=user)
+    cartuser=cart.objects.filter(userdata=user)
+    context['cart']=cartuser
     price=0
-    for x in cart_data:
-        price+=x.Items_data.price-x.Items_data.discount
-        print(x.Items_data.pname)
-    context['cart']=cart_data
-    context['confirm']="Do You want to order? "
-    if request.method=='POST':
-        context['confirm']=''
-        price=0.0
-        order=OrderProduct.objects.filter(userdata=user)
-        for x in cart_data:         # for fetching data from order
-            item=Item.objects.get(id=x.Items_data_id)
-            order_place=OrderProduct(price=item.price,Items_data=item,userdata=user)
-            order_place.save()
-        print(price)
-        order=OrderProduct.objects.filter(userdata=user)
-        for y in order:
-            item=Item.objects.get(id=y.Items_data_id)
-            price+=float(item.price)-float(item.discount)   
-        print(price)
-        context['order']=order
-        context['total']=price
-        return render(request,"OrderingOnline/confirmation_order.html",context)
+    for x in cartuser:
+        item=Item.objects.get(id=x.Items_data_id)
+        item.total=float(item.price)-float(item.discount)
+        item.save()
+        print(item.total)
+        price+=float(item.price)-float(item.discount) 
+    context['price']=price 
     return render(request,"OrderingOnline/cart.html",context)
-    
-    
+
+
+# delete from place order
+# @login_required(login_url='/OrderingOnline/login')
+# def delete_item_from_order(request,id,order_id):
+#     user=customer.objects.get(id=request.session['customer_id'])
+#     print("cart-id",id)
+#     cartdata=cart.objects.get(id=id)
+#     data=OrderProduct.objects.get(id=order_id,cartdata=cartdata,userdata=user.id)
+#     data.delete()
+#     context={}
+#     context['cart_item_success']="successfully deleted"
+#     order=OrderProduct.objects.filter(userdata=user)
+#     context['order']=order
+#     for y in order:
+#         price+=float(y.price)
+#         print("order-total ",price)
+#     context['total']=price
+#     return HttpResponseRedirect('/OrderingOnline/placeorder/')
 
 @login_required(login_url='/OrderingOnline/login')
-def delete_item_from_order(request,id):
-    user=customer.objects.get(id=request.session['customer_id'])
-    Item_data=Item.objects.get(id=id)
-    data=OrderProduct.objects.get(Items_data_id=Item_data.id,userdata=user.id)
-    data.delete()
+def charge_pay(request):
+    return render(request,'OrderingOnline/payment.html')
+
+
+@login_required(login_url='/OrderingOnline/login')
+def payment(request):
     context={}
-    context['cart_item_success']="successfully deleted"
-    return render(request,"OrderingOnline/confirmation_order.html",context)
+    if request.method=="POST":
+        uname=request.POST['uname']
+        account=request.POST['account_no']
+        password=request.POST['password']
+        print(uname,account)
+        user_data=customer.objects.get(uname=uname)
+        try:  
+           user=Account_user.objects.get(user_account)
+           if user:
+               account_user=Account_user.objects.get(user_account=user_data,account_no=account)
+               print(account_user)
+               save_otp(user_data.mobile)
+           else:
+               context['detail']="Account no is wrong"
+        except Account_user.DoesNotExist:
+            context['not_saved']=['Not saved']
+    return render(request,'OrderingOnline/payment.html',context)
 
-@login_required(login_url='/OrderingOnline/login')
-def payOrder(request):
-    pass
+def saved_account(request):
+    context={}
+    if request.method=="POST":
+        account=request.POST['account_no']
+        customer_data=customer.objects.get(id=request.session['customer_id'])
+        if customer_data is not None:
+            account_user=Account_user(user_account=customer_data,account_no=account,bank_password=0)
+            account_user.save()
+    return render(request,'OrderingOnline/payment.html',context)
+
+def reset_account(request):
+    context={}
+    context['reset']="reset"
+    if request.method=='POST':
+         account=request.POST['reset']
+         user=customer.objects.get(id=request.session['customer_id'])
+         if user:
+             account_user=Account_user.objects.get(user_account=user)
+             account_user.account_no=account
+             account_user.save()
+             conetxt['success']="Successfully changed"
+         return render(request,'OrderingOnline/payment.html',context)
+    return render(request,'OrderingOnline/payment.html',context)
+    
+    
+# import stripe
+
+# # Create your views here.
+    
+# # stripe  key
+# stripe.api_key = settings.STRIPE_SECRET_KEY
+
+# class product_landing(TemplateView):
+#     template_name='OrderingOnline/payment.html'
+    
+#     def get_context_data(self,**kwargs):
+        
+#         context=super(product_landing,self).get_context_data(**kwargs)
+#         context.update({
+#               'STRIPE_PUBLIC_KEY':settings.STRIPE_PUBLIC_KEY
+#         })    
+#         return context
+    
+    
+    
+    
+# class CreateCheckoutSessionView(View):
+#     def post(self,request,*args,**kwargs):
+#         YOUR_DOMAIN = 'http://127.0.0.1:8000'
+#         product_id=self.kwargs['pk']
+#         product=Item.objects.get(id=product_id)
+#         print(product)
+#         checkout_session = stripe.checkout.Session.create(
+#             payment_method_types=['card'],
+#             line_items=[
+#                 {
+#                     'price_data': {
+#                         'currency': 'inr',
+#                         'unit_amount': product.price,
+#                         'Product_data': {
+#                             'name': product.pname,
+#                             # 'images': ['https://i.imgur.com/EHyR2nP.png'],
+#                         },
+#                     },
+#                     'quantity': 1,
+#                 },
+#             ],
+#             mode='payment',
+#             success_url=YOUR_DOMAIN + '/success/',
+#             cancel_url=YOUR_DOMAIN + '/cancel/',
+#         )
+#         return JsonResponse({
+#             'id': checkout_session.id
+#         })
+# if __name__ == '__main__':
+#     app.run(port=4242)
+

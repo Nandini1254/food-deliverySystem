@@ -2,7 +2,7 @@
 {% block content %}
 {% load static %}
        <link rel="stylesheet" type="text/css" href="{% static 'OrderingOnline/register.css' %}" />
-<div class="show_dish">
+<div class="show_dish" style="min-height:400px;">
 
        {% if messages %}
        <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -12,9 +12,9 @@
          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
        </div>  
        {% endif %}
-       
+      
 {% if Item_data %}
-<div class="container">
+<div class="container" >
     <div class="card">
         <div class="image_item">
             <img  src="/media/{{Item_data.pimage}}"  alt="Card image cap">
@@ -36,7 +36,6 @@
 </div>
 
 </div>
-     
 {% endif %}
 {% include 'OrderingOnline\footer.html' %}
 

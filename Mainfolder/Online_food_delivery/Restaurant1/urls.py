@@ -6,16 +6,22 @@ urlpatterns = [
     path('r_login/',views.r_login,name="r_login"),
     path('r_signup/',views.r_signup,name="r_signup"), 
     path('profile/',views.profile_show,name="profile"), 
+    
     # update restauarant profile
     path('update_rest/',views.update,name="updateprofile_rest"), 
     path('logout_rest/',views.logout_rest,name="logout_rest"),
     path('changingpassword/',views.changingpassword,name="changingpassword"),
+    path('deleteAccount/',views.deleteaccount,name="delete_restaurant_account"),
+    
     # inserting data
     path('additems/',views.add_items,name="additems"),
+    
     # for showing all food items
     path('manageitems/',views.manageitems,name="manageitems"),
+    
     # update items
     path('item_details/<int:id>/',views.itemdetails,name="item_details"),
+    path('deleteitems/<int:id>/',views.deleteitems,name="deleteitems"),
     
     path('resetpassword/', 
          auth_views.PasswordResetView.as_view(template_name='Restaurant1/forgetpassword.html'),

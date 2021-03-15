@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 
 from django.contrib.auth.models import auth
@@ -8,10 +8,14 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
 # Create your views here.
+# for authenticate page
+from django.contrib.auth.decorators import login_required
 
 
+@login_required(login_url='/delivery_boy/d_login')
 def home(request):
     return render(request,"delivery_boy/d_Home.html")
+
 
 def d_login(request):
     if request.method=="POST":
@@ -30,6 +34,7 @@ def d_login(request):
                 request.session['d_status']=user.status
                 request.session['d_mobile']=user.mobile
                 request.session['d_email']=user.email
+                auth.login(request,user1)
                 return HttpResponseRedirect("/delivery_boy/home")
        else:
            return HttpResponse("not find")
@@ -58,7 +63,10 @@ def d_signup(request):
     return render(request,'delivery_boy/d_register.html')
     
 # Create your views here.
+
+@login_required(login_url='/delivery_boy/d_login')
 def update(request):
+    context={}
     if request.method=="POST":
        mobileno=request.POST['mobileno']
        address=request.POST['address']
@@ -66,9 +74,9 @@ def update(request):
        city=request.POST['city']
        email=request.session['d_email']
        if deliveryboy.objects.filter(email=email).exists():
-           user=deliveryboy_manager.objects.get(email=email)
+           user=deliveryboy.objects.get(email=email)
            if user is not None:          
-               user.mobileno=mobileno
+               user.mobile=mobileno
                user.state=state
                user.city=city
                user.address=address
@@ -78,23 +86,28 @@ def update(request):
                request.session['d_address']=user.address
                request.session['d_mobile']=user.mobile 
                user.save()
-               messages="successfully inserted"
-               return render(request,'/delivery_boy/profile.html',{"mess":messages})
+               context['messages']="successfully inserted"
+            #    print("yez")
+               return render(request,'delivery_boy/d_profile.html',context)
            else:
                return HttpResponse("something went wrong")
     else:
-        return render(request,'delivery_boy/profile.html')
-       
+        return render(request,'delivery_boy/d_profile.html')
+
+
+@login_required(login_url='/delivery_boy/d_login')      
 def profile_show(request):
     return render(request,"delivery_boy/d_profile.html")
 
 
+@login_required(login_url='/delivery_boy/d_login')
 def logout_deliveryboy(request):
     if request.session['d_email']:
         request.session.flush()
     return HttpResponseRedirect("delivery_boy/d_login")
 
 
+@login_required(login_url='/delivery_boy/d_login')
 def change_password(request):
     context={}
     if request.method=='POST':
@@ -115,10 +128,25 @@ def change_password(request):
                 request.session["d_pass"]=new_pass
                 user.set_password(new_pass)
                 user.save()
-                context["message"]="Successfully change password"
+                context["yes"]="Successfully change password"
                 context['color']="alert-success"
                 # print(user.password)         
             else:
-                context["message"]="Incorrect password"
-                context['color']="alert-danger"         
+                context["forget"]="Incorrect password"
+                context['color']="alert-danger"     
+        else:
+             contet['no']="Enter password same"    
     return render(request,"delivery_boy/change_password.html",context)
+
+
+
+#account delete
+
+@login_required(login_url='/delivery_boy/d_login')
+def delete_deliveryboy(request):
+    user=User.objects.get(username=request.session['d_name'])
+    user_del=deliveryboy.objects.get(deliveryboy_name=request.session['d_name'])
+    user_del.delete()
+    user.delete()
+    return redirect("/")
+    

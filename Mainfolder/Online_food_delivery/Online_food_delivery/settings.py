@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'Restaurant1',
-    'OrderingOnline',
     'delivery_boy',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'OrderingOnline',
 ]
 
 MIDDLEWARE = [
@@ -141,3 +141,9 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'dhanira04@gmail.com'
 EMAIL_HOST_PASSWORD = 'Dhanira@1204$'
+
+
+
+# for payment
+# STRIPE_PUBLIC_KEY = os.environ.get("STRIPE_SECRET_KEY", "pk_test_51IUJIeLlqmdBWnjuRG0bQhUfd0Ur1odDjVxPB4MOLUg7HBjtkpYRQm9JsLI4mVaEqW96UdUMTXy6YAqIMKqwjlFf00mg0wYXNB")
+# STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "sk_test_51IUJIeLlqmdBWnjuTRrWlMISdevUGfW5wxcosL1tFKzZbyTuRKkuvhcaTFggYIu0Lnq25QTsw9wHh21rqcJPxTxO00zH5glWiB")

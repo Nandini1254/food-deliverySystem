@@ -17,14 +17,13 @@
       <div class="card">
         <div class="row">
           <div class="col-md-4">
-            <img src="/media/{{x.Items_data.pimage}}" alt="Available">
+            <img src="/media/{{x.cartdata.Items_data.pimage}}" alt="Available">
           </div>
           <div class="col-md-8">
             <div class="card-body">
-              <h5 class="card-title">{{x.Items_data.pname}}</h5>
-              <p class="card-text">Category:{{x.Items_data.category}}</p>
-              <p class="card-text">Price: {{x.Items_data.price}}</p> 
-              <a href="{% url 'delete_item_from_order' id=x.Items_data.id %}" class="btn btn-danger delete">Remove</a>      
+              <h5 class="card-title">{{x.cartdata.Items_data.pname}}</h5>
+              <p class="card-text">Category:{{x.cartdata.Items_data.category}}</p>
+              <p class="card-text">Price: {{x.cartdata.Items_data.price}}</p> 
             </div>
           </div>
         </div>
@@ -35,8 +34,9 @@
 </div>
 
 <div class="paynow">
-<form action="" method="post">
-    <center> <input type="submit" class="pay" name="pay" value="Pay Now"></center>
+<form action="{% url 'charge_pay' %}" method="post">
+  {% csrf_token %}
+    <center><button class="pay">Checkout</button></center>
    
 </form>
 </div>
