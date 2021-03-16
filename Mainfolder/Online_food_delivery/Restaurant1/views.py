@@ -9,13 +9,19 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
-from Restaurant1.models import restaurant,Category,Item
+from Restaurant1.models import restaurant,Category,Item,Order_confirm
 # for authenticate page
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 @login_required(login_url='/restaurant/r_login/')
 def home(request):
+    context={}
+    order=Order_confirm.objects.all()
+    print("yes")
+    print(order)
+    for x in order:
+        print(x)
     return render(request,"Restaurant1/rHome.html")
 
 def r_login(request):
@@ -215,6 +221,8 @@ def manageitems(request):
     context['data']=data
     return render(request,"Restaurant1/manage_items.html",context)
 
+
+#update items
 @login_required(login_url='/restaurant/r_login/') 
 def itemdetails(request,id):
     context={}
@@ -230,6 +238,7 @@ def itemdetails(request,id):
         data.category=request.POST.getlist('category',None)
         data.pdesc=request.POST['desc']
         data.price=request.POST['price']
+        data.discount=request.POST['discount']
         if "foodphoto" in request.FILES:
             image=request.FILES['foodphoto']
             if filetype.is_image(image):
@@ -237,7 +246,7 @@ def itemdetails(request,id):
             else:
                 context['error']="Please enter Image file" 
         data.save()            
-        context['success']="Successfully added data"             
+        context['success']="Successfully Updated details"             
     return render(request,"Restaurant1/itemdetails.html",context)
 
 

@@ -35,13 +35,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='offer',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=10)),
-            ],
-        ),
-        migrations.CreateModel(
             name='restaurant',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),

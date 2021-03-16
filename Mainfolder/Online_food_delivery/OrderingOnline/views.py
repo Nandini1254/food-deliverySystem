@@ -3,10 +3,12 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import auth
+
 from OrderingOnline.models import customer,Account_user
 from django.contrib.auth.models import User
-from Restaurant1.models import restaurant,Item,cart,OrderProduct
+from Restaurant1.models import restaurant,Item,cart,OrderProduct,Order_confirm
 from django.contrib.auth.hashers import check_password
+
 # from OrderingOnline.decoders import unauthenticUser
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -15,20 +17,25 @@ from django.views import View
 from django.views.generic import TemplateView
 from django.http import JsonResponse
 from django.conf import settings
+
+from decimal import *
 import random
 import os
 from twilio.rest import Client
 def save_otp(mobile):
         account_sid = 'AC75173bb622333cb934fbdb95b68e90ce'
         auth_token = 'd2de390e6a58a0df1b39370a63ed0bb6'
-        otp=random.random()
+        otp=random.randrange(1000,5000)
         client = Client(account_sid, auth_token)
+        number='+91'+mobile
+        print(number)
         message = client.messages.create(
                 body='your otp is {}'.format(otp),
                 from_=+12242231053,
-                to='9328003668'
+                to=+919328003668
         )
-        print(otp)
+        print('otp')
+        return otp
         
 def index(request):
     context={}
@@ -232,6 +239,8 @@ def show_dish(request,id,rest_id):
     context['Item_data']=Item_data
     context['rest_id']=rest_id
     return render(request,"OrderingOnline/show_dish.html",context)
+
+
 # show restaurnat items
 def show_restaurant(request,id):
     context={}
@@ -241,41 +250,55 @@ def show_restaurant(request,id):
     context['rest_id']=id
     return render(request,"OrderingOnline/show_restaurant_items.html",context)
 
-def count(request,id):
-    context={}
-    context['cart_count']=cart.objects.all().count
-    items=Item.objects.filter(rdata=id)
-    context['items']=items
-    context['rest_id']=id
-    if request.method=="POST":
-        context['count']=request.POST['quantity']
-        return render(request,"OrderingOnline/show_restaurant_items.html",context)
-# showing cart element 
+
 @login_required(login_url='/OrderingOnline/login')
 def cart_show(request):
     context={}
-    context['cart_count']=cart.objects.all().count
     cust=customer.objects.get(id=request.session['customer_id'])
     cartuser=cart.objects.filter(userdata=cust)
     context['cart']=cartuser
     price=0.0
     for x in cartuser:
-        try:
-            if request.method=='POST':
-                print("yes")
-                x.quantity=request.POST['quantity']
-                print(x.quantity)
-        except MultiValueDictKeyError:
-            print("handle")
-                 
-        item=Item.objects.get(id=x.Items_data_id)
-        item.total=x.quantity*(float(item.price)-float(item.discount))
-        item.save()
-        print(item.total)
-        price+=float(item.price)-float(item.discount) 
-    context['price']=price 
-        
+        price+=x.quantity*(float(x.Items_data.price)-float(x.Items_data.discount))
+        print(x.Items_data.pname)
+    context['price']=price
     return render(request,"OrderingOnline/cart.html",context)
+
+@login_required(login_url='/OrderingOnline/login')
+def cart_increase(request,id):
+    context={}
+    cust=customer.objects.get(id=request.session['customer_id'])
+    cartuser=cart.objects.filter(userdata=cust)
+    price=0.0
+    for x in cartuser:
+                price+=x.quantity*(float(x.Items_data.price)-float(x.Items_data.discount))
+                print(x.Items_data.pname)
+                context['price']=price
+    if request.method=='POST':
+        print(id)
+        context['cart_count']=cart.objects.all().count
+        cust=customer.objects.get(id=request.session['customer_id'])
+        cartuser=cart.objects.filter(userdata=cust)
+        context['cart']=cartuser
+        cart_item=cart.objects.get(id=id)
+        print(cart_item)
+        if request.POST['increase']=='+':
+            cart_item.quantity=Decimal((request.POST['quantity']))
+            cart_item.save()
+            cart_item.final_amount=float(Decimal(cart_item.quantity)*Decimal((cart_item.final_amount)))                                                                                                                                                                                                                                                                                                                           
+            cart_item.save()
+            price=0.0
+            for x in cartuser:
+                price+=x.quantity*(float(x.Items_data.price)-float(x.Items_data.discount))
+                print(x.Items_data.pname)
+                context['price']=price
+        return render(request,"OrderingOnline/cart.html",context)
+    return render(request,"OrderingOnline/cart.html",context)
+
+
+
+
+   
    
    
 #adding data in cart 
@@ -290,8 +313,6 @@ def add_to_cart(request,rest_id,id,page):
     check_data=cart.objects.filter(userdata=cust,Items_data=Item_data)
     print(check_data)
     quantity=1
-    context['quantity']=quantity
-   
     if check_data:
         try:
             if page == 'show_restaurant_items':
@@ -305,8 +326,9 @@ def add_to_cart(request,rest_id,id,page):
         except:
             return HttpResponseRedirect("/OrderingOnline/showdishes/{0}".format(id))
     else:
-        final_amount=float(Item_data.price)-float(Item_data.discount)
+        final_amount=(float(Item_data.price)-float(Item_data.discount))
         print(final_amount)
+        final_amount=float(quantity)*(final_amount)
         cartItem=cart(userdata=cust,Items_data=Item_data,quantity=quantity,final_amount=final_amount)
         cartItem.save() 
     # print(cartItem)
@@ -340,28 +362,28 @@ def placeorder(request):
     cart_data=cart.objects.filter(userdata=user)
     price=0.0
     for x in cart_data:
-        price+=float(x.Items_data.price)-float(x.Items_data.discount)
+        price+=x.quantity*(float(x.Items_data.price)-float(x.Items_data.discount))
         print(x.Items_data.pname)
     context['price']=price
     context['cart']=cart_data
     context['confirm']="Do You want to order? "
     if request.method=='POST':
         context['confirm']=''
-        price=0.0
         for x in cart_data:         # for fetching data from order
             # item=Item.objects.get(id=x.Items_data_id)
             order_place=OrderProduct(price=x.final_amount,userdata=user,cartdata=x)
             order_place.save()
         print(price)
         order=OrderProduct.objects.filter(userdata=user)
-        for y in order:
-           price+=float(y.price)
         print("order-total ",price)
         context['order']=order
         context['total']=price
         return render(request,"OrderingOnline/confirmation_order.html",context)
     return render(request,"OrderingOnline/cart.html",context)
     
+
+
+
 
 #deleteitems from cart and order
 @login_required(login_url='/OrderingOnline/login')
@@ -419,19 +441,25 @@ def payment(request):
     if request.method=="POST":
         uname=request.POST['uname']
         account=request.POST['account_no']
-        password=request.POST['password']
         print(uname,account)
-        user_data=customer.objects.get(uname=uname)
-        try:  
-           user=Account_user.objects.get(user_account)
-           if user:
-               account_user=Account_user.objects.get(user_account=user_data,account_no=account)
-               print(account_user)
-               save_otp(user_data.mobile)
-           else:
-               context['detail']="Account no is wrong"
-        except Account_user.DoesNotExist:
-            context['not_saved']=['Not saved']
+        try:
+            user_data=customer.objects.get(uname=uname)
+            try:  
+                user=Account_user.objects.get(user_account=user_data)
+                if user:
+                    account_user=Account_user.objects.get(account_no=account)
+                    print(account_user)
+                    otp=save_otp(user_data.mobile)
+                    request.session['otp']=otp
+                    # print("s1",otp)
+                    context['otp']=otp
+                else:
+                     context['detail']="Account no is wrong"
+            except Account_user.DoesNotExist:
+                print("no")
+                context['not_saved']=['Not saved']
+        except:
+            context['detail']="Account user is not exist"
     return render(request,'OrderingOnline/payment.html',context)
 
 def saved_account(request):
@@ -441,6 +469,7 @@ def saved_account(request):
         customer_data=customer.objects.get(id=request.session['customer_id'])
         if customer_data is not None:
             account_user=Account_user(user_account=customer_data,account_no=account,bank_password=0)
+            print(account_user)
             account_user.save()
     return render(request,'OrderingOnline/payment.html',context)
 
@@ -459,6 +488,42 @@ def reset_account(request):
     return render(request,'OrderingOnline/payment.html',context)
     
     
+def final_payment(request):
+    context={}
+    user=customer.objects.get(id=request.session['customer_id'])
+    cart1=cart.objects.filter(userdata=user)
+    if request.method == 'POST':
+        otp=request.session['otp']
+        print("s",otp)
+        if otp == request.POST['otp']:
+            context['successfully']="successfully ordered"
+            for x in cart1:
+                order=OrderProduct.objects.filter(cartdata=x,userdata=user)
+                order_final=Order_confirm(Item=x.Items_data,price=x.final_amount,quantity=x.quantity)
+                order_final.save()
+                print(order)
+                order.delete()
+                x.delete()
+            return render(request,"OrderingOnline/order.html",context)
+        else:
+            context['resend']="resend"
+            for x in cart1:
+                print("delete")
+                order=OrderProduct.objects.filter(cartdata=x,userdata=user)
+                order.delete()
+            return render(request,'OrderingOnline/order.html',context)
+    return render(request,'OrderingOnline/payment.html',context)
+
+
+
+
+#order page current order status:
+def orderpage(request):
+    context={}
+    order=Order_confirm.objects.filter(user=request.session['customer_id'])
+    context['order']=order
+    return render(request,"OrderingOnline/order.html",context)
+
 # import stripe
 
 # # Create your views here.

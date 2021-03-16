@@ -6,19 +6,19 @@
 
 <div class="payment">
 
-  
   {% if success %}
    <center>{{success}}</center> 
   {% endif %}
-    
+   
+      
 
 
-{% if detail %}
+{% if not_saved %}
 <center>Account details is wrong</center>
-are you want to reset it?<a href="reset_account">Reset Account</a>  
+are you want to reset it?<a href="{% url 'reset_account' %}">Reset Account</a>  
 {% endif %}
   
-{% if not_saved %}
+{% if detail %}
 <div class="container">
    <center> Your acount details is not saved,  please fill the form for payment</center>
   
@@ -31,17 +31,44 @@ are you want to reset it?<a href="reset_account">Reset Account</a>
         <div class="form-group">
             <center> <input type="submit" class="btn btn-primary checkout" value="Check out"></center>                     
         </div> 
-        </form>
+      </form>
 </div>
 
-{% else %}
-  
+{% elif otp %}
+{{otp}}
+
+
 <div class="container">
                 
   <div class="pay">
-    {% if account_not_registered %}
-        not register
-    {% else %}
+   
+      <form action="{% url 'final_payment' %}" method="POST">
+        {% csrf_token %}
+          <div class="form-group">
+              <label for="Account_no">Otp</label>
+              <input type="text" class="form-control" name="otp" id="otp" placeholder="otp" requried>
+          </div>  
+          <div class="form-group">
+              <center> <input type="submit" class="btn btn-primary checkout" value="Confirm"></center>                     
+          </div> 
+      </form>
+
+  </div>
+</div>
+
+{% else %}
+
+
+<div class="container">
+                
+
+{% if resend %}
+  <center>Have you forget the details? wat to resend?<a href="{% url 'reset_account' %}">Reset Account</a>  </center>
+  <center>Please enter the details again</center>
+{% endif %}
+  
+
+  <div class="pay">
       <form action="{% url 'payment' %}" method="POST">
         {% csrf_token %}
           <div class="form-group">
@@ -51,18 +78,15 @@ are you want to reset it?<a href="reset_account">Reset Account</a>
           <div class="form-group">
               <label for="Account_no">Account_no</label>
               <input type="text" class="form-control" name="account_no" id="Account_no" placeholder="Account_no" requried>
-          </div> 
-          <div class="form-group">
-             <label for="password">Password</label>
-             <input type="password" class="form-control" name="password" id="password" placeholder="password" requried>
-           </div> 
+          </div>  
           <div class="form-group">
               <center> <input type="submit" class="btn btn-primary checkout" value="Check out"></center>                     
           </div> 
       </form>
-    {% endif %}
   </div>
-</div>    
+</div>
+
+
 
 {% endif %}
   

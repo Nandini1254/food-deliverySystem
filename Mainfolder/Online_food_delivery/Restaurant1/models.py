@@ -65,12 +65,12 @@ class Item(models.Model):
     rdata=models.ManyToManyField(restaurant,related_name='rest_items')
     pname=models.CharField(max_length=50)
     pdesc=models.CharField(max_length=150,default="delicious")
-    price=models.DecimalField(max_digits=6,decimal_places=2)
+    price=models.DecimalField(max_digits=19, decimal_places=10)
     pimage=models.ImageField(upload_to='menu_images/')
     category=models.CharField(max_length=150,default="delicious")
-    total=models.DecimalField(max_digits=6,decimal_places=2,default=0.0)
-    discount=models.DecimalField(max_digits=3,decimal_places=2,default=0)
-    feedback=models.DecimalField(max_digits=1,decimal_places=0,default=0)
+    total=models.DecimalField(max_digits=19, decimal_places=10,default=0.0)
+    discount=models.DecimalField(max_digits=19, decimal_places=10,default=0)
+    feedback=models.DecimalField(max_digits=19, decimal_places=10,default=0)
     
     def __str__(self):
         return self.pname
@@ -81,7 +81,7 @@ class cart(models.Model):
     userdata=models.ForeignKey(customer, on_delete=models.CASCADE)
     Items_data=models.ForeignKey(Item, on_delete=models.CASCADE)
     quantity=models.IntegerField(default=0)
-    final_amount=models.DecimalField(max_digits=6,decimal_places=2,default=0)
+    final_amount=models.DecimalField(max_digits=19, decimal_places=10,default=0)
     
     def return_items_id(self):
         return id
@@ -93,7 +93,7 @@ class OrderProduct(models.Model):
     id=models.AutoField(primary_key=True)
     created_on=models.DateTimeField(auto_now_add=True)
     status=models.CharField(max_length=150,default="not_delivered")
-    price=models.DecimalField(max_digits=6,decimal_places=2)
+    price=models.DecimalField(max_digits=19, decimal_places=10)
     userdata=models.ForeignKey(customer, on_delete=models.CASCADE)
     cartdata=models.ForeignKey(cart, on_delete=models.CASCADE)
     # Items_data=models.ForeignKey(Item, on_delete=models.CASCADE)
@@ -103,9 +103,22 @@ class OrderProduct(models.Model):
         return f'Order: {self.created_on.strftime("%b %d %I: %M %p")}'
     
     def update_order(self):
-        self.status="dekivered"  
+        self.status="delivered"  
 
+
+class Order_confirm(models.Model):
+    id=models.AutoField(primary_key=True)
+    user=models.ForeignKey(customer,on_delete=models.SET_NULL,null=True)
+    Item=models.ForeignKey(Item, on_delete=models.SET_NULL,null=True)
+    price=models.DecimalField(max_digits=19, decimal_places=10)
+    status=models.CharField(max_length=15,default="Ordered")
+    quantity=models.IntegerField()
+    
 
 class offer(models.Model):
     name=models.CharField(max_length=10)
+    Item=models.ForeignKey(Item, on_delete=models.CASCADE)
+    discount=models.DecimalField(max_digits=19, decimal_places=10,default=0)
     
+    def __str__(self):
+        return self.name

@@ -51,6 +51,7 @@ urlpatterns = [
      
      path("add_to_favourite/<int:id>/",views.add_to_favourite,name="add_to_favourite"),
      path("cartdetails/",views.cart_show,name="cart_show"),
+     path("cartdetails/<int:id>",views.cart_increase,name="cart_increase"),
      path("showdishes/<int:id>/",views.show_dish_by_search,name="show_dish_by_search"),
      path("showdetails/<int:id>,<int:rest_id>/",views.show_dish,name="show_dish"),
       
@@ -67,7 +68,8 @@ urlpatterns = [
      path('payment/',views.payment,name="payment"),
      path('saved_account/',views.saved_account,name="saved_account"),
      path('reset_account/',views.reset_account,name="reset_account"),
-    
+     path('finalpay/',views.final_payment,name="final_payment"),
+     path("orders/",views.orderpage,name="order"),
 
 
 ]

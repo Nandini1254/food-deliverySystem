@@ -1,0 +1,52 @@
+{% extends 'OrderingOnline\root_file.html' %}
+{% block content %}
+{% load static %}
+       <link rel="stylesheet" type="text/css" href="{% static 'OrderingOnline/register.css' %}" />
+  
+<div class="container" style="height: 400px;">
+
+{% if success %}
+    
+<div class="alert alert-success" role="alert">
+    <h3>Your Order will be reached soon...</h3>
+</div>
+
+{% endif %}
+    
+    <div class="row">
+        {% for x in order %}
+        <div class="col-sm-12 col-md-12 mt-2 ">
+          <div class="card" style="size:80%;">
+            <div class="row">
+              <div class="col-md-5">
+                <img src="/media/{{x.Item.pimage}}" class="w-100 h-100" alt="Available">
+              </div>
+              <div class="col-md-7">
+                <div class="card-body">
+                  <h5 class="card-title">{{x.Item.pname}}</h5>
+                  <p class="card-text">Category:{{x.Item.category}}</p>
+                  <p class="card-text">Price: {{x.Item.price}}</p>
+                    <p> quantity:{{x.quantity}}</p>
+                    <p>Status:{{x.status}}</p>          
+                </div>
+              </div>
+            </div>
+          </div> 
+        </div>
+       
+    
+      
+       {% endfor %}
+      </div>
+
+</div>
+
+
+{% include 'OrderingOnline\footer.html' %}
+
+{% endblock %} 
+       
+       
+       
+
+
