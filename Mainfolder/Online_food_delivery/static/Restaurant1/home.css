@@ -2,19 +2,30 @@
     margin:0px;
     padding:0px;
 }
+
 .container-fluid{
     margin:0px;
     padding: 0px;
 }
-.col-md-3{
-    background-color:cornflowerblue;
-    padding-right: 10px;
-    min-height:650px;
+.navbar-left{
+    min-height: 100vh;
+    color: white;
+    
+}
+.image_back{
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-color: rgb(25, 68, 77);
+    background-blend-mode: overlay;
+}
+.col-left{
+    background-color: #6c757d;
 }
 a{
     text-decoration: none;
     color: white;
-    font-size: 18px;
+    font-size: 1rem;
 }
 a:hover{
     color: plum;

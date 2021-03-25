@@ -14,6 +14,7 @@ urlpatterns = [
     path('change_password/',views.change_password,name="change_password"),
     path('delete_deliveryboy/',views.delete_deliveryboy,name="delete_deliveryboy"),
     
+    path('update_order/<int:id>',views.update_order,name="update_order"),
     
     
     # forgot password

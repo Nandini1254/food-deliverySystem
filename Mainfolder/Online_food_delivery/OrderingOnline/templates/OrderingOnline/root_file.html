@@ -12,6 +12,15 @@
    <!-- for payement -->
     <script src="https://js.stripe.com/v3/"></script>
     <title>index</title>
+
+
+  <style>
+      .fa-heart:hover{
+          color: red;
+      }
+  </style>
+
+
   </head>
   
   <body>
@@ -24,27 +33,27 @@
         <div class="collapse navbar-collapse " id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto  mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
+              <a class="nav-link mt-1"  aria-current="page" href="{% url 'index' %}">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'about' %}">About</a>
+              <a class="nav-link mt-1" href="{% url 'about' %}">About</a>
             </li>
             {% if not request.session.customer_id %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'login_category' %}">Login</a>
+              <a class="nav-link mt-1" href="{% url 'login_category' %}">Login</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'register_category' %}">Sign up</a>
+              <a class="nav-link mt-1" href="{% url 'register_category' %}">Sign up</a>
             </li>
             {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'logout_customer' %}">Logout</a>
+              <a class="nav-link mt-1" href="{% url 'logout_customer' %}">Logout</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'order' %}">order</a>
+              <a class="nav-link mt-1" href="{% url 'order' %}">order</a>
             </li>
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle mt-1" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                  Profile
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -55,21 +64,37 @@
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link me-2 mb-2" href="{% url 'cart_show' %}" style="position: relative;">
+              <a class="nav-link mt-1 me-2 mb-2" href="{% url 'cart_show' %}" style="position: relative;">
                 <div class="count mr-5 px-2" style="color:aliceblue" style="position: absolute;">              
                   {% if cart_count %}
                      {{cart_count}}
                     {% else %}
-                     0
-                  {% endif %}                  
+                      0
+                   {% endif %}                  
                 </div>
-                <i class="fa fa-shopping-cart mr-5"  style="position: absolute;" aria-hidden="true"></i></a>
+                  <i class="fa fa-shopping-cart mr-5"  style="position: absolute;" aria-hidden="true"></i></a>
             </li>
+            {% if notification_count %}
+            <li class="nav-item">
+              <a class="nav-link  me-2 mb-2" href="{% url 'show_notification' %}">
+                <div class="count mr-5 mb-1 px-2" style="color:white;  width: 5px; height: 10px;">
+                 
+                  {{notification_count}}
+                
+                </div>   
+              <i class="fas fa-bell  mr-5"></i></a>
+            </li>
+            {% endif %}   
             {% endif %}
+            <li class="nav-item">
+              <a class="nav-link mt-1" href="{% url 'show_favourite' %}"><i class="fas fa-heart  me-2"></i></a>
+            </li>
+            
           </ul>
+          
           <form class="d-flex" action="{% url 'search' %}">
             <input class="form-control me-2" type="search" name="dish" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+            <button class="btn btn-success" type="submit">Search</button>
           </form>
         </div>
       </div>

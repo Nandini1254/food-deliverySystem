@@ -7,14 +7,23 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
+from Restaurant1.models import Order_confirm
 # Create your views here.
+
+from Online_food_delivery import signals
 # for authenticate page
 from django.contrib.auth.decorators import login_required
 
 
 @login_required(login_url='/delivery_boy/d_login')
 def home(request):
-    return render(request,"delivery_boy/d_Home.html")
+    context={}
+    try:
+        order=Order_confirm.objects.filter(delivery_boy_id=request.session['d_id'])
+        context['order']=order
+    except:
+        return render(request,"delivery_boy/d_Home.html",context)
+    return render(request,"delivery_boy/d_Home.html",context)
 
 
 def d_login(request):
@@ -34,6 +43,8 @@ def d_login(request):
                 request.session['d_status']=user.status
                 request.session['d_mobile']=user.mobile
                 request.session['d_email']=user.email
+                request.session['d_id']=user.id
+                print(user.id)
                 auth.login(request,user1)
                 return HttpResponseRedirect("/delivery_boy/home")
        else:
@@ -102,9 +113,8 @@ def profile_show(request):
 
 @login_required(login_url='/delivery_boy/d_login')
 def logout_deliveryboy(request):
-    if request.session['d_email']:
-        request.session.flush()
-    return HttpResponseRedirect("delivery_boy/d_login")
+    request.session.flush()
+    return HttpResponseRedirect("/delivery_boy/d_login")
 
 
 @login_required(login_url='/delivery_boy/d_login')
@@ -149,4 +159,27 @@ def delete_deliveryboy(request):
     user_del.delete()
     user.delete()
     return redirect("/")
+    
+@login_required(login_url='/delivery_boy/d_login')
+def update_order(request,id):
+    context={}
+    order=Order_confirm.objects.get(id=id)
+    if request.method=="POST":
+        status=request.POST['status']
+        if status=='delivered' and order.status=='dispatched':
+            order.status="delivered"
+            delivery_boy=deliveryboy.objects.get(id=order.delivery_boy_id)
+            signals.notifications.send(delivery_boy,request=request,order=[order])
+            print(delivery_boy)
+            print("del")
+            delivery_boy.status="Available"
+            delivery_boy.save()
+            order.save()
+           
+        elif order.status=="Ordered" and status=='dispatched':
+            order.status="dispatched"
+            order.save()   
+    return redirect("/delivery_boy/home/")
+        
+    
     

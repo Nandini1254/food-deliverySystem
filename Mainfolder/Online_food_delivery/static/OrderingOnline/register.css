@@ -5,6 +5,9 @@
     font-family: 'Akaya Telivigala', cursive;  
 }
 
+
+/* navbar css */
+
 .container{
     min-height: 100%;
     bottom:90%;
@@ -36,35 +39,43 @@
 /* indexpage css */
 .index-heading
 {
-    background-image:url('/media/food_images/home/home.jpg');
-    height: 100vh;
+   
+    height: 110vh;
     width: 100%;
+    background-size: 100% 100%;
+    background-image:url('/media/food_images/home/final.jpeg');
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
-    background-size: 100% 100%;
-    z-index: 1;
+    background-color: rgba(0,0,0,0.6);
+    background-blend-mode: overlay; 
     position: relative;
-    opacity: 0.8;
+   
 }
-.carousel-main{
-    padding-top: 30px;
-    padding-left:400px;
-    position: relative;
+.main-class{
+  margin: auto;
+  margin-top: 10px;
+  width: 70%;
+  height: 30%;
 }
-.carousel-main .carousel-indicators
-{
-    padding-right: 500px;
+.text-body{
+    top:15%;
+    left:10%;
+    position: absolute;
+    transform: translate(-10%,-15%);
+    font-weight: 600;
+    width:400px;
+    text-align: center;
+    color: #ffffff !important;
+    /* background-color: rgb(146, 226, 193); */
+    padding: 5px;
 }
 
 
 
 /* about page */
 .about{
-    background-image: url('https://res.cloudinary.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_1340/Lunch1_vlksgq');
-    background-repeat: no-repeat;
-    background-position: center center;
-    z-index: 1;
+   
     height: 100vh;
     width: 100%;
     font-weight: 400;
@@ -121,7 +132,13 @@
 
 .order_page{
     padding-top: 10px;
-    background-image: linear-gradient(to right top, #edf62b, #fbd514, #ffb31b, #ff922c, #f6733c, #e87233, #d9712b, #cb7023, #b18810, #909b23, #67ab49, #21b776);
+    /* background-image: linear-gradient(to right top, #edf62b, #fbd514, #ffb31b, #ff922c, #f6733c, #e87233, #d9712b, #cb7023, #b18810, #909b23, #67ab49, #21b776); */
+}
+.order_page .card
+{
+    -webkit-box-shadow: 0px 0px 14px 5px rgba(0,0,0,0.75);
+-moz-box-shadow: 0px 0px 14px 5px rgba(0,0,0,0.75);
+box-shadow: 0px 0px 14px 5px rgba(0,0,0,0.75);
 }
 .order_page .total
 {

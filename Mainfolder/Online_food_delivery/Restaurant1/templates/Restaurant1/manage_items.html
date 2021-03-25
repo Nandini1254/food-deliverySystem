@@ -16,7 +16,12 @@
     <link rel="stylesheet" type="text/css" href="{% static '/Restaurant1/item.css' %}">
 
 
-    <title>Home</title>
+    <title>ManageItems</title>
+    <style>
+        .col-md-10{
+          color: black;
+        }
+      </style>
 </head>
 
 <body>
@@ -33,6 +38,7 @@
                                 <div>
                                   <h5 >{{x.pname}}</h5>
                                   <p >{{x.category}}</p>
+                                  
                                   <a href="{% url 'item_details' id=x.id %}" class="btn btn-warning" style="margin-bottom: 10px;">Update</a>
                                   <a href="{% url 'deleteitems' id=x.id %}" class="btn btn-danger" style="margin-bottom: 10px;">Delete</a>
                                    

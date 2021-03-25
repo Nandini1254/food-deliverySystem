@@ -23,6 +23,10 @@ urlpatterns = [
     path('item_details/<int:id>/',views.itemdetails,name="item_details"),
     path('deleteitems/<int:id>/',views.deleteitems,name="deleteitems"),
     
+    #update orders
+    path('status_Order/',views.status_update,name="status"),
+    
+    
     path('resetpassword/', 
          auth_views.PasswordResetView.as_view(template_name='Restaurant1/forgetpassword.html'),
          name="reset_password"),

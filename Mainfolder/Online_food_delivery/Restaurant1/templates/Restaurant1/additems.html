@@ -15,13 +15,18 @@
   <link rel="stylesheet" type="text/css" href="{% static '/Restaurant1/home.css' %}">
 
 
-  <title>Home</title>
+  <title>Additems</title>
+  <style>
+    .col-md-10{
+      color: black;
+    }
+  </style>
 </head>
 
 <body>
   {% include "restaurant1/sidebar.html" %}
 
-      <div class="col-md-9">
+      <div class="col-md-10">
         <h1>
           {% if available %}
           {{available}}

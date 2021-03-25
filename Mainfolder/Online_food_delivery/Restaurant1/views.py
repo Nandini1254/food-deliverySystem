@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.hashers import check_password
 from Restaurant1.models import restaurant,Category,Item,Order_confirm
+from OrderingOnline.models import Item_feedback
 # for authenticate page
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -17,70 +18,95 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url='/restaurant/r_login/')
 def home(request):
     context={}
-    order=Order_confirm.objects.all()
-    print("yes")
-    print(order)
-    for x in order:
-        print(x)
-    return render(request,"Restaurant1/rHome.html")
+    order=Order_confirm.objects.filter().order_by('creat_on')
+    context['order']=[]
+    try:
+        user=restaurant.objects.get(uname=request.session['r_user'])
+        if user.status==False:
+            context['status']="close"
+        else:
+            context['status']='Open'
+        for x in order:
+            try:
+                if x.status=='ordered':
+                    rdata=Item.objects.get(rdata=request.session['rest_id'],id=x.Item.id)
+                    print(rdata.rdata.all())
+                    if x.Item==rdata:
+                        print("yes")
+                        context['order'].append(x)
+                        print(rdata)
+            except:
+                pass
+    except:
+          return redirect("/restaurant/r_login")
+    return render(request,"Restaurant1/rHome.html",context)
 
 def r_login(request):
     context={}
     if request.method=="POST":
-       uname=request.POST['email']
-       password=request.POST['password']
-       user1 = auth.authenticate(username=uname,password=password)
-       print(user1)
-       if user1 is not None:
-           print("yes")
-           user=restaurant.objects.get(uname=uname)
-           auth.login(request,user1)
-           request.session["r_name"]=user.Restaurant_name
-           request.session["r_user"]=user.uname
-           request.session['r_city']=user.city
-           request.session['r_state']=user.state
-           request.session['r_address']=user.address
-           request.session['r_status']=user.status
-           request.session['r_mobile']=user.mobile
-           request.session['r_email']=user.email
-           print(user.Restaurant_photo)
-           request.session['r_photo']=str(user.Restaurant_photo) 
-           return render(request,"Restaurant1/rHome.Html")               
-       else:
-           context['not_exist'] ="User is not exist"
-           return render(request,'OrderingOnline/login.html',context)
-    else:
-        return render(request,'Restaurant1/r_login.html')
-    
-    
+         uname=request.POST['email']
+         password=request.POST['password']
+         print(uname)
+         user1 = auth.authenticate(username=uname,password=password)
+         print(user1)
+         if user1 is not None:
+            print("yes")
+            try:
+                user=restaurant.objects.get(uname=uname)
+                auth.login(request,user1)
+                request.session["r_name"]=user.Restaurant_name
+                request.session["r_user"]=user.uname
+                request.session['r_city']=user.city
+                request.session['r_state']=user.state
+                request.session['r_address']=user.address
+                request.session['r_status']=user.status
+                request.session['r_mobile']=user.mobile
+                request.session['r_email']=user.email
+                request.session['rest_id']=user.id              
+                print(user.Restaurant_photo)
+                request.session['r_photo']=str(user.Restaurant_photo) 
+                return render(request,"Restaurant1/rHome.Html")  
+            except:
+                    context['not_exist'] ="User is not exist"
+                    return render(request,'Restaurant1/r_login.html',context)             
+            else:
+                context['not_exist'] ="User is not exist"
+                return render(request,'Restaurant1/r_login.html',context)
+    return render(request,'Restaurant1/r_login.html',context)
+        
+        
 def r_signup(request):
     context={}
     if request.method=="POST":
-       restname=request.POST['restname']
-       restphoto=''
-       uname=request.POST['username']
-       email=request.POST['email']
-       mobileno=request.POST['mobileno']
-       cpassword=request.POST['password']
-       password=request.POST['cpassword']
-       address=request.POST['address']
-       state=request.POST['state']
-       city=request.POST['city']
-       if cpassword==password:
-           user1=User.objects.create_user(username=uname,email=email,password=password)
-           user=restaurant(Restaurant_name=restname,status=False,uname=uname,email=email,mobile=mobileno,password=cpassword,address=address,state=state,city=city)
-           if user is not None:
-             if "restphoto" in request.FILES:
-                if filetype.is_image(request.FILES['restphoto']):
-                    user.Restaurant_photo=request.FILES['restphoto']
-                    user1.save()
-                    user.save()
-                    context['success']=messages="successfully inserted"
-                    print(user)
-                    print("yes")
-                    return render(request,"Restaurant1/r_login.html")
-                else:
-                    context['error']="Please enter Image file"          
+        restname=request.POST['restname']
+        restphoto=''
+        uname=request.POST['username']
+        email=request.POST['email']
+        mobileno=request.POST['mobileno']
+        cpassword=request.POST['password']
+        password=request.POST['cpassword']
+        address=request.POST['address']
+        state=request.POST['state']
+        city=request.POST['city']
+        user_check = auth.authenticate(username=uname)
+        if user_check is not None:
+                context['error']="Username is already exist please try different username"  
+        else:
+            if cpassword==password:
+                    user1=User.objects.create_user(username=uname,email=email,password=password)
+                    user=restaurant(Restaurant_name=restname,status=False,uname=uname,email=email,mobile=mobileno,password=cpassword,address=address,state=state,city=city)
+                    if user is not None:
+                        if "restphoto" in request.FILES:
+                            if filetype.is_image(request.FILES['restphoto']):
+                                user.Restaurant_photo=request.FILES['restphoto']
+                                user1.save()
+                                user.save()
+                                context['success']=messages="successfully inserted"
+                                print(user)
+                                print("yes")
+                                return render(request,"Restaurant1/r_login.html")
+                            else:
+                                context['error']="Please enter Image file"  
     return render(request,'Restaurant1/r_register.html',context)
 
 
@@ -109,7 +135,7 @@ def update(request):
                    if filetype.is_image(request.FILES['restphoto']):
                          user.Restaurant_photo=request.FILES['restphoto']
                          user.save()
-                         context['success']=messages="successfully inserted"
+                         context['success']=messages="successfully updated"
                          request.session['r_photo']=str(user.Restaurant_photo)
                    else:
                         context['error']="Please enter Image file"
@@ -120,7 +146,7 @@ def update(request):
                request.session['r_state']=user.state
                request.session['r_address']=user.address
                request.session['r_mobile']=user.mobile 
-               
+              
                return render(request,'Restaurant1/profile.html',context)
            else:
                return render(request,"/")
@@ -165,9 +191,9 @@ def changingpassword(request):
         new_pass=request.POST['Newpassword']
         new_verify=request.POST['NewConfirmpassword']
         if(new_pass==new_verify):
-            # print(True)
+            print(True)
             user=User.objects.get(username=request.session["r_user"])
-            # print(user.password)
+            print(user.password)
             check=check_password(current,user.password)
             # print(check)
             if check==True:
@@ -214,7 +240,7 @@ def add_items(request):
 @login_required(login_url='/restaurant/r_login/') 
 def manageitems(request):
     context={}
-    rdata=restaurant.objects.get(Restaurant_name=request.session['r_name'])
+    rdata=restaurant.objects.get(id=request.session['rest_id'])
     data=Item.objects.filter(rdata=rdata.id)
     print("dt")
     print(data)
@@ -257,3 +283,19 @@ def deleteitems(request,id):
     data=Item.objects.get(id=id)
     data.delete()  
     return render(request,"Restaurant1/manage_items.html",context)
+
+
+
+@login_required(login_url='/restaurant/r_login/') 
+def status_update(request):
+    context={}
+    if request.method=="POST":
+        rdata=restaurant.objects.get(uname=request.session['r_user'])
+        if rdata.status==False:
+            rdata.status=True
+            rdata.save()
+        else:
+            rdata.status=False
+            rdata.save()
+        print(rdata.status)
+    return redirect("/restaurant/home/")

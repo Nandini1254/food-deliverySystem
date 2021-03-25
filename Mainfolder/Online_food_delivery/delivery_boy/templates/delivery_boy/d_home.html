@@ -16,13 +16,53 @@
   </head>
   
   <body>
-    {% if request.session.d_email %}
+ 
     <div class="container-fluid">
       <div class="row">
        {% include "delivery_boy\sidebar.html" %}
-       <div class="col-md-9">Hello</div>
+       <div class="col-md-9">
+          
+         <div class="row mt-3">
+
+            
+            {% if order %}
+                   
+                   {% for x in order %}
+
+                   <div class="col-md-3 m-2" style="border:1px solid black; ">
+                         <center> <h4>Name: {{x.Item.pname}}</h4></center>
+                         <div class="status">
+                             current status: {{x.status}}
+                         </div>
+                         <form action="{% url 'update_order' id=x.id %}" class="mt-2" method="post">
+                            {% csrf_token %}
+                            <select name="status" class="form-control m-2" id="update">
+                              <option value="dispatched">dispatched</option>
+                              <option value="delivered">delivered</option>
+                            </select>
+                            <input type="submit" class="btn btn-info m-2" value="Update">
+                         </form>
+
+                    </div>
+                      
+                   {% endfor %}
+                     
+
+            {% else %}
+
+
+            {% endif %}
+              
+
+
+
+         </div>
+
+
+
+       </div>
      </div> 
-     {% endif %}
+    
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: Bootstrap Bundle with Popper -->

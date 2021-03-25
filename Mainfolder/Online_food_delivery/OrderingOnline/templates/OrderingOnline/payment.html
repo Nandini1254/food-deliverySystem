@@ -10,15 +10,15 @@
    <center>{{success}}</center> 
   {% endif %}
    
-      
+  
 
 
-{% if not_saved %}
+{% if detail %}
 <center>Account details is wrong</center>
 are you want to reset it?<a href="{% url 'reset_account' %}">Reset Account</a>  
 {% endif %}
   
-{% if detail %}
+{% if not_saved %}
 <div class="container">
    <center> Your acount details is not saved,  please fill the form for payment</center>
   
@@ -29,13 +29,30 @@ are you want to reset it?<a href="{% url 'reset_account' %}">Reset Account</a>
             <input type="text" class="form-control" name="account_no" id="Account_no" placeholder="Account_no" requried>
         </div> 
         <div class="form-group">
-            <center> <input type="submit" class="btn btn-primary checkout" value="Check out"></center>                     
+            <center> <input type="submit" class="btn btn-primary checkout" value="save"></center>                     
+        </div> 
+      </form>
+</div>
+{% elif reset %}
+
+<div class="container">
+   <center> Reset</center>
+  
+      <form action="{% url 'reset_account' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="Account_no">Account_no</label>
+            <input type="text" class="form-control" name="account_no" id="Account_no" placeholder="Account_no" requried>
+        </div> 
+        <div class="form-group">
+            <center> <input type="submit" class="btn btn-primary checkout" value="Change"></center>                     
         </div> 
       </form>
 </div>
 
+
 {% elif otp %}
-{{otp}}
+
 
 
 <div class="container">
@@ -63,11 +80,16 @@ are you want to reset it?<a href="{% url 'reset_account' %}">Reset Account</a>
                 
 
 {% if resend %}
-  <center>Have you forget the details? wat to resend?<a href="{% url 'reset_account' %}">Reset Account</a>  </center>
+  <center>Have you forget the details? want to resend?<a href="{% url 'reset_account' %}">Reset Account</a>  </center>
   <center>Please enter the details again</center>
 {% endif %}
   
 
+{% if not_register %}
+  <center>{{not_register}}</center>
+  
+{% endif %}
+  
   <div class="pay">
       <form action="{% url 'payment' %}" method="POST">
         {% csrf_token %}
