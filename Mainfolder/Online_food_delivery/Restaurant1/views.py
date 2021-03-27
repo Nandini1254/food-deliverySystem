@@ -20,6 +20,7 @@ def home(request):
     context={}
     order=Order_confirm.objects.filter().order_by('-id')
     context['order']=[]
+    print(order)
     try:
         user=restaurant.objects.get(uname=request.session['r_user'])
         if user.status==False:
@@ -28,7 +29,7 @@ def home(request):
             context['status']=True
         for x in order:
             try:
-                if x.status=='ordered':
+                if x.status=='Ordered':
                     rdata=Item.objects.get(rdata=request.session['rest_id'],id=x.Item.id)
                     print(rdata.rdata.all())
                     if x.Item==rdata:

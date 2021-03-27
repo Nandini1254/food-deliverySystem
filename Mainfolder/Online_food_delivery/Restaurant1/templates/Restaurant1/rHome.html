@@ -22,15 +22,17 @@
    {% include "restaurant1/sidebar.html" %}
    <!-- reqest.session.photo -->
   <div class="col-md-10 image_back" style="background-image: url(/media/{{request.session.r_photo}});">
-   
+  
     
     <div class="row m-sm-2">
           {% for x in order %}
-          <div class="col-md-5 " style="margin-top: 10px;">    
+
+          <div class="col-md-3 " style="margin-top: 10px; color:black">    
               <div class="card p-2" style="width: 15rem;">     
                   <div>
                     <h5 >Name: {{x.Item.pname}}</h5>
                     <h5 >Caegory: {{x.Item.category}}</h5>
+                    <h6>User: {{x.user}}</h6>
                     <h6>Status:{{x.status}}</h6>
                   </div>
                 </div>
