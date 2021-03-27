@@ -850,7 +850,7 @@ def final_payment(request):
                 print(occupid_deliveryboy)
                 order.delete()
                 x.delete()
-                order=Order_confirm.objects.filter(user=request.session['customer_id'])
+                order=Order_confirm.objects.filter(user=request.session['customer_id']).order_by('-id')
                 context['order']=order
             return render(request,"OrderingOnline/order.html",context)
         else:

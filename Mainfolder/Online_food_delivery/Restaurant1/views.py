@@ -18,14 +18,14 @@ from django.contrib.auth.decorators import login_required
 @login_required(login_url='/restaurant/r_login/')
 def home(request):
     context={}
-    order=Order_confirm.objects.filter().order_by('creat_on')
+    order=Order_confirm.objects.filter().order_by('-id')
     context['order']=[]
     try:
         user=restaurant.objects.get(uname=request.session['r_user'])
         if user.status==False:
-            context['status']="close"
+            context['status']=False
         else:
-            context['status']='Open'
+            context['status']=True
         for x in order:
             try:
                 if x.status=='ordered':
@@ -94,7 +94,7 @@ def r_signup(request):
         else:
             if cpassword==password:
                     user1=User.objects.create_user(username=uname,email=email,password=password)
-                    user=restaurant(Restaurant_name=restname,status=False,uname=uname,email=email,mobile=mobileno,password=cpassword,address=address,state=state,city=city)
+                    user=restaurant(Restaurant_name=restname,uname=uname,email=email,mobile=mobileno,password=cpassword,address=address,state=state,city=city)
                     if user is not None:
                         if "restphoto" in request.FILES:
                             if filetype.is_image(request.FILES['restphoto']):
@@ -261,7 +261,8 @@ def itemdetails(request,id):
     context['data']=data
     if request.method=='POST':
         data.pname=request.POST['foodname']
-        data.category=request.POST.getlist('category',None)
+        cat=request.POST.getlist('category',None)
+        data.category=cat[0]
         data.pdesc=request.POST['desc']
         data.price=request.POST['price']
         data.discount=request.POST['discount']
@@ -294,8 +295,9 @@ def status_update(request):
         if rdata.status==False:
             rdata.status=True
             rdata.save()
-        else:
+        elif rdata.status==True:
             rdata.status=False
+            print("open to close")
             rdata.save()
         print(rdata.status)
     return redirect("/restaurant/home/")

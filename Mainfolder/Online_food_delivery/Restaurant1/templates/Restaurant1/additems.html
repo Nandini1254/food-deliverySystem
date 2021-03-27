@@ -27,22 +27,22 @@
   {% include "restaurant1/sidebar.html" %}
 
       <div class="col-md-10">
-        <h1>
-          {% if available %}
-          {{available}}
-          {% endif %}
+              <h1>
+                {% if available %}
+                {{available}}
+                {% endif %}
 
-          {% if success %}
-              <div class="alert alret-green alert-dismissible fade show" role="alert">
-                {{success}}
-              </div>
-          {% endif %}
-          {% if error %}
-          <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            {{error}}
-          </div>
-          {% endif %}
-        </h1>
+                {% if success %}
+                    <div class="alert alret-green alert-dismissible fade show" role="alert">
+                      {{success}}
+                    </div>
+                {% endif %}
+                {% if error %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  {{error}}
+                </div>
+                {% endif %}
+              </h1>
         <div class="formclass1">
           <form action="{% url 'additems' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -54,35 +54,35 @@
 
                   <h4>Hotel: {{request.session.r_name}}</h4>
 
-                </div>
+               
                   <div class="row">
-                      <div class="form-group col-md-6">
-                        <label for="foodname">Food</label>
-                        <input type="text" class="form-control" name="foodname" id="foodname">
-                      </div>
-                    <div class="form-group col-md-6">
-                        <label for="category">Category</label>
-                        <select name="category" class="form-control" id="category">
-                          {% if cat %}
-                          {% for x in cat %}
-                          <option value="{{x.cname}}">{{x.cname}}</option>
-                          {% endfor %}
-                          {% endif %}
-                        </select>
-                     </div>
+                        <div class="form-group col-md-6">
+                          <label for="foodname">Food</label>
+                          <input type="text" class="form-control" name="foodname" id="foodname">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="category">Category</label>
+                            <select name="category" class="form-control" id="category">
+                              {% if cat %}
+                              {% for x in cat %}
+                              <option value="{{x.cname}}">{{x.cname}}</option>
+                              {% endfor %}
+                              {% endif %}
+                            </select>
+                        </div>
                  </div>
-                <div class="form-group">
-                  <label for="desc">Food Description</label>
-                  <textarea name="desc" class="form-control" id="desc" cols="8" rows="4"></textarea>
-                </div>
-                <div class="form-group">
-                  <label for="price">Price</label>
-                  <input type="number" class="form-control" name="price" id="price">
-                </div>
-                <div class="form-group">
-                  <label for="foodphoto">Image</label>
-                  <input type="file" class="form-control" id="foodphoto" name="foodphoto">
-                </div>
+                    <div class="form-group">
+                      <label for="desc">Food Description</label>
+                      <textarea name="desc" class="form-control" id="desc" cols="8" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="price">Price</label>
+                      <input type="number" class="form-control" name="price" id="price">
+                    </div>
+                  <div class="form-group">
+                    <label for="foodphoto">Image</label>
+                    <input type="file" class="form-control" id="foodphoto" name="foodphoto">
+                  </div>
                   <button type="submit" class="btn btn-success btn-lg">Submit</button>
                   <a href="{% url 'r_home' %}" class="btn btn-dark btn-lg ">Back</a>
 
@@ -91,8 +91,6 @@
         </div>
       </div>
     </div>
-  
-    
 
 
 

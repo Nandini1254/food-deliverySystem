@@ -25,18 +25,18 @@
    
     
     <div class="row m-sm-2">
-      {% for x in order %}
-      <div class="col-md-5 " style="margin-top: 10px;">    
-          <div class="card p-2" style="width: 15rem;">     
-              <div>
-                <h5 >Name: {{x.Item.pname}}</h5>
-                <h5 >Caegory: {{x.Item.category}}</h5>
-                <h6>Status:{{x.status}}</h6>
-              </div>
-            </div>
-      </div>
-      
-      {% endfor %}
+          {% for x in order %}
+          <div class="col-md-5 " style="margin-top: 10px;">    
+              <div class="card p-2" style="width: 15rem;">     
+                  <div>
+                    <h5 >Name: {{x.Item.pname}}</h5>
+                    <h5 >Caegory: {{x.Item.category}}</h5>
+                    <h6>Status:{{x.status}}</h6>
+                  </div>
+                </div>
+          </div>
+          
+          {% endfor %}
     </div>
   </div>
 

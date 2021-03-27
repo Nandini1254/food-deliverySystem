@@ -19,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 def home(request):
     context={}
     try:
-        order=Order_confirm.objects.filter(delivery_boy_id=request.session['d_id'])
+        order=Order_confirm.objects.filter(delivery_boy_id=request.session['d_id']).order_by('-id')
         context['order']=order
     except:
         return render(request,"delivery_boy/d_Home.html",context)
@@ -65,7 +65,7 @@ def d_signup(request):
        if cpassword==password:
            user1=User.objects.create_user(username=deliveryboy_name,email=email,password=password)
            if user1 is not None:
-               user=deliveryboy( deliveryboy_name=deliveryboy_name,status=False,email=email,mobile=mobileno,password=cpassword,address=address,state=state,city=city)
+               user=deliveryboy( deliveryboy_name=deliveryboy_name,email=email,mobile=mobileno,password=cpassword,address=address,state=state,city=city)
                print(user)
                if user is not None:
                    user.save()
@@ -154,8 +154,9 @@ def change_password(request):
 
 @login_required(login_url='/delivery_boy/d_login')
 def delete_deliveryboy(request):
-    user=User.objects.get(username=request.session['d_name'])
+    user=User.objects.get(username=request.session['d_name']) 
     user_del=deliveryboy.objects.get(deliveryboy_name=request.session['d_name'])
+    request.session.flush()
     user_del.delete()
     user.delete()
     return redirect("/")
